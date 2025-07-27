@@ -7,60 +7,60 @@ import Link from "next/link";
 
 export default function AuthPage() {
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className=" flex flex-col-reverse lg:flex-row h-screen w-full overflow-hidden">
       {/* Left Side */}
-      <div className="w-full lg:w-1/2 bg-[#f2f2f2] dark:bg-[#262626] flex flex-col justify-center px-10 lg:px-20 py-10 rounded-r-[50px]">
+      <div className="w-full h-1/2 lg:h-full lg:w-1/2 bg-[#f2f2f2] dark:bg-[#262626] flex flex-col justify-center px-10 lg:px-20 py-10 rounded-t-[50px] lg:rounded-t-[0px] lg:rounded-r-[50px]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-                  {/* Logo Icon */}
-                  <div className="">
-                    <svg
-                      className="w-6 h-6"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="freelensoGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="#3EC1F3" />
-                          <stop offset="100%" stopColor="#7B3DED" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        fill="url(#freelensoGradient)"
-                        fillRule="evenodd"
-                        d="M12 8a1 1 0 0 0-1 1v10H9a1 1 0 1 0 0 2h11a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-8Zm4 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
-                        clipRule="evenodd"
-                      />
-                      <path
-                        fill="url(#freelensoGradient)"
-                        fillRule="evenodd"
-                        d="M5 3a2 2 0 0 0-2 2v6h6V9a3 3 0 0 1 3-3h8c.35 0 .687.06 1 .17V5a2 2 0 0 0-2-2H5Zm4 10H3v2a2 2 0 0 0 2 2h4v-4Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
+          {/* Logo Icon */}
+          <div className="">
+            <svg
+              className="w-6 h-6"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <defs>
+                <linearGradient
+                  id="freelensoGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#3EC1F3" />
+                  <stop offset="100%" stopColor="#7B3DED" />
+                </linearGradient>
+              </defs>
+              <path
+                fill="url(#freelensoGradient)"
+                fillRule="evenodd"
+                d="M12 8a1 1 0 0 0-1 1v10H9a1 1 0 1 0 0 2h11a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-8Zm4 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
+                clipRule="evenodd"
+              />
+              <path
+                fill="url(#freelensoGradient)"
+                fillRule="evenodd"
+                d="M5 3a2 2 0 0 0-2 2v6h6V9a3 3 0 0 1 3-3h8c.35 0 .687.06 1 .17V5a2 2 0 0 0-2-2H5Zm4 10H3v2a2 2 0 0 0 2 2h4v-4Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
 
-                  {/* Logo Text/Name */}
-                  <div className="relative w-[140px] h-[60px]">
-                    <Image
-                      src="/logo.png"
-                      alt="Logo Text"
-                      fill
-                      priority
-                      className="object-contain"
-                      sizes="(max-width: 768px) 100vw, 140px"
-                    />
-                  </div>
-                </Link>
+          {/* Logo Text/Name */}
+          <div className="relative w-[140px] h-[60px]">
+            <Image
+              src="/logo.png"
+              alt="Logo Text"
+              fill
+              priority
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 140px"
+            />
+          </div>
+        </Link>
 
         {/* Heading */}
         <h1 className="text-4xl font-extrabold text-white mb-4">
