@@ -1,8 +1,11 @@
 "use client";
 
-import { Button, TextField } from "@mui/material";
-import { ReceiptText, Send } from "lucide-react";
 import React, { useState } from "react";
+import { Button, MenuItem, TextField } from "@mui/material";
+import { ReceiptText, Send } from "lucide-react";
+import InvoiceItem from "./InvoiceItem";
+import InvoiceSummary from "./InvoiceSummary";
+import InvoiceNotes from "./InvoiceNotes";
 
 const textFieldStyle = {
   input: { color: "white" },
@@ -22,12 +25,12 @@ const handleClose = () => {
   window.history.back();
 };
 
+const today = new Date().toISOString().split("T")[0];
+
 const InvoiceForm = () => {
   const [form, setForm] = useState({
     client: "",
-    startDate: "",
-    endDate: "",
-    dueDate: "",
+    dueDate: today,
     items: [
       {
         projectTitle: "",
@@ -43,10 +46,16 @@ const InvoiceForm = () => {
     notes: "",
   });
 
+  const demoClients = [
+    { id: 1, name: "Shubham Singh" },
+    { id: 2, name: "Billy Butcher" },
+    { id: 3, name: "Tony Stark" },
+  ];
+
   return (
     <div className="w-full md:w-[720px] mx-auto bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl shadow-xl">
       {/* Header */}
-      <div className="flex  items-start justify-between mb-6">
+      <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
             <ReceiptText className="text-gray-700 dark:text-white" />
@@ -56,7 +65,7 @@ const InvoiceForm = () => {
               Create New Invoice
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Create Invoice For Your Clinet.
+              Create Invoice For Your Client.
             </p>
           </div>
         </div>
@@ -70,148 +79,74 @@ const InvoiceForm = () => {
 
       {/* Form */}
       <form className="space-y-8">
-        <div className="grid grid-cols-1  gap-6">
+        <div className="grid grid-cols-1 gap-6">
+          {/* Client Select */}
           <TextField
             select
             name="client"
-            label="client"
+            label="Select Client"
             variant="outlined"
             size="small"
             sx={textFieldStyle}
             fullWidth
-            // value={form.country}
-            // onChange={handleChange}
+            value={form.client}
+            onChange={(e) => setForm({ ...form, client: e.target.value })}
           >
-            {/* {countryList.map((country) => (
-              <MenuItem key={country} value={country}>
-                {country}
+            {demoClients.map((client) => (
+              <MenuItem key={client.id} value={client.name}>
+                {client.name}
               </MenuItem>
-            ))} */}
+            ))}
           </TextField>
 
+          {/* Due Date */}
           <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-
-          <TextField
-            label="Start Date"
+            label="Due Date"
             type="date"
             size="small"
-            sx={{
-              ...textFieldStyle,
-              "& label": { color: "gray" },
-            }}
+            sx={textFieldStyle}
             InputLabelProps={{ shrink: true }}
             fullWidth
-          />
-          <TextField
-            label="End Date"
-            type="date"
-            size="small"
-            sx={{
-              ...textFieldStyle,
-              "& label": { color: "gray" },
-            }}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
+            value={form.endDate}
+            onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
           />
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-        </div>
+        {/* Invoice Items */}
+        <InvoiceItem
+          items={form.items}
+          onChange={(updatedItems, subtotal) => {
+            const grandTotal =
+              subtotal + Number(form.tax) - Number(form.discount);
+            setForm((prev) => ({
+              ...prev,
+              items: updatedItems,
+              subtotal,
+              grandTotal,
+            }));
+          }}
+        />
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-          <TextField
-            name="firstName"
-            label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            // value={form.firstName}
-            // onChange={handleChange}
-          />
-        </div>
+        {/* Totals Section */}
+        <InvoiceSummary
+          tax={form.tax}
+          discount={form.discount}
+          grandTotal={form.grandTotal}
+          onChange={(field, value) => {
+            const updated = { ...form, [field]: value };
+            const grandTotal =
+              updated.subtotal + Number(updated.tax) - Number(updated.discount);
+            setForm({ ...updated, grandTotal });
+          }}
+        />
+
+        <InvoiceNotes
+          value={form.notes}
+          onChange={(val) => handleChange("notes", val)}
+        />
 
         {/* Actions */}
-        <div className="flex  gap-4">
+        <div className="flex gap-4">
           <Button
             variant="outlined"
             sx={{
@@ -223,7 +158,7 @@ const InvoiceForm = () => {
                 borderColor: "#888",
                 backgroundColor: "#2a2a2a",
               },
-              width: "50%",
+              width: "30%",
             }}
             onClick={handleClose}
           >
@@ -242,7 +177,8 @@ const InvoiceForm = () => {
               "&:hover": {
                 backgroundColor: "#2563eb",
               },
-              width: "50%",
+              width: "70%",
+                height: '40px'
             }}
             endIcon={<Send />}
           >

@@ -52,7 +52,7 @@ export default function SiteHeader() {
               target="_blank"
               className="dark:text-foreground"
             >
-              GitHub
+              DevSyntra
             </a>
           </Button>
         </div>
