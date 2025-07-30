@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { MenuItem, TextField } from "@mui/material";
+import AppInputField from "../AppInputField";
 
 const textFieldStyle = {
   input: { color: "white" },
@@ -132,109 +133,14 @@ const ClientForm = () => {
       <form onSubmit={handleFormSubmit} className="space-y-8">
         {/* Basic Info */}
         <div className="grid grid-cols-1  gap-6">
-          <TextField
-            name="firstName"
+          <AppInputField
+            id="firstName"
             label="First Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
             value={form.firstName}
             onChange={handleChange}
           />
-          <TextField
-            name="lastName"
-            label="Last Name"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.lastName}
-            onChange={handleChange}
-          />
-          <TextField
-            name="email"
-            label="Email"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.email}
-            onChange={handleChange}
-          />
-          <PhoneInput
-            country={"in"}
-            value={form.mobileNo}
-            onChange={(phone) =>
-              setForm((prev) => ({ ...prev, mobileNo: phone }))
-            }
-            inputStyle={{
-              width: "100%",
-              backgroundColor: "#1e1e1e",
-              borderColor: "#444",
-              color: "white",
-              borderRadius: "4px",
-              height: "40px",
-              fontSize: "14px",
-            }}
-            dropdownStyle={{ color: "#000" }}
-            containerStyle={{ width: "100%" }}
-          />
-        </div>
-
-        {/* Company Info */}
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-          <TextField
-            name="company"
-            label="Company Name (Optional)"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.company}
-            onChange={handleChange}
-          />
-          <TextField
-            name="address"
-            label="Address (Optional)"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.address}
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* Location Info */}
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-          <TextField
-            select
-            name="country"
-            label="Country"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.country}
-            onChange={handleChange}
-          >
-            {countryList.map((country) => (
-              <MenuItem key={country} value={country}>
-                {country}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            name="pincode"
-            label="Pin Code"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.pincode}
-            onChange={handleChange}
-          />
+      
+         
         </div>
 
         {/* Actions */}

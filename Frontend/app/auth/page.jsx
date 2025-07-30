@@ -2,10 +2,43 @@
 
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "@/utils/firebase";
 import Link from "next/link";
+import { useUserSignMutation } from "@/store/api/apiSlice";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function AuthPage() {
+  const [userSign, { IsLoading, IsError }] = useUserSignMutation();
+  const router = useRouter();
+
+ const handleLogin = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    const userData = {
+      uid: user.uid,
+      userEmail: user.email,
+      userName: user.displayName,
+      userPhoto: user.photoURL,
+      emailVerified: user.emailVerified,
+    };
+
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign`,
+      { userData },
+      { withCredentials: true }
+    );
+
+    router.push("/auth");
+  } catch (error) {
+    console.error("Login error:", error?.response?.data?.message || error.message);
+  }
+};
+
+
   return (
     <div className=" flex flex-col-reverse lg:flex-row h-screen w-full overflow-hidden">
       {/* Left Side */}
@@ -78,7 +111,10 @@ export default function AuthPage() {
 
         {/* Social Logins */}
         <div className="flex flex-col gap-4">
-          <button className="flex items-center justify-center gap-3 border  py-3 rounded-md bg-[black] ">
+          <button
+            onClick={handleLogin}
+            className="flex items-center justify-center gap-3 border  py-3 rounded-md bg-[black] "
+          >
             <FcGoogle size={24} /> Log in with Google
           </button>
         </div>
@@ -86,12 +122,6 @@ export default function AuthPage() {
 
       {/* Right Side */}
       <div className="hidden lg:block w-1/2 relative">
-        <Image
-          src="/authImge.jpg" // replace with your actual image in /public
-          alt="Login Visual"
-          fill
-          className="object-cover"
-        />
         {/* Overlay Content (optional) */}
         <div className="absolute bottom-10 left-10 text-white">
           <h3 className="text-2xl font-semibold">

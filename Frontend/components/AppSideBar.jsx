@@ -42,10 +42,42 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { setUser } from "@/store/global/globalState";
+import axios from "axios";
 
 export default function AppSidebar(props) {
   const pathname = usePathname();
   const [ShowBox, setShowBox] = useState(false);
+  const { setTheme } = useTheme();
+  const User = useSelector((state) => state?.globalState?.User);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("Logout response:", response.data);
+
+      // Optional: check if success is true
+      if (response.data.success) {
+        dispatch(setUser(null));
+        router.push("/auth");
+      } else {
+        console.warn("Logout failed on server:", response.data.message);
+      }
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   const data = [
     {
@@ -85,8 +117,6 @@ export default function AppSidebar(props) {
       linkTwo: "",
     },
   ];
-
-  const { setTheme } = useTheme();
 
   return (
     <>
@@ -227,15 +257,25 @@ export default function AppSidebar(props) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className=" cursor-pointer">
                   <SidebarMenuButton>
-                    <User2 /> John Doe <ChevronUp className=" ml-auto" />
+                    <div className="w-8 h-8 border rounded-full relative overflow-hidden">
+                      {User?.userPhoto ? (
+                        <Image src={User.userPhoto} fill alt="user-photo" />
+                      ) : (
+                        <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center text-xs">
+                          {User?.userName?.charAt(0)?.toUpperCase() || "U"}
+                        </div>
+                      )}
+                    </div>
+                    {User?.userName}
+                    <ChevronUp className="ml-auto" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={"end"}>
                   <DropdownMenuItem>Account</DropdownMenuItem>
-                  <DropdownMenuItem onClick={()=> setShowBox(true)}>
+                  <DropdownMenuItem onClick={() => setShowBox(true)}>
                     Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
@@ -251,7 +291,7 @@ export default function AppSidebar(props) {
             <div className="w-full lg:w-1/3 h-1/3 lg:h-full bg-zinc-800 p-4 flex flex-col ">
               <div className="flex justify-start">
                 <button
-                  onClick={()=>setShowBox(false)}
+                  onClick={() => setShowBox(false)}
                   className="p-1 cursor-pointer text-zinc-400 hover:text-white hover:bg-zinc-700 rounded"
                 >
                   <X size={20} />
