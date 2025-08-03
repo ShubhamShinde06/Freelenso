@@ -1,6 +1,6 @@
 // errorHandler.js
 const ErrorHandler = (res, message = "Something went wrong", error, status = 500) => {
-  console.log(error)
+  console.log(error || message)
   return res.status(status).json({
     success: false,
     message,

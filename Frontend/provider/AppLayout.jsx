@@ -8,6 +8,7 @@ import { useUserVerifyQuery } from "@/store/api/apiSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/global/globalState";
+import { initSocket } from "@/lib/socket";
 
 export default function AppLayout({ children }) {
   const pathname = usePathname();

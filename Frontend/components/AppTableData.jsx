@@ -116,7 +116,7 @@ const AppTableData = ({
       } else if (e.key === "ArrowUp") {
         setSelectedRowIndex((prev) => Math.max((prev ?? 1) - 1, 0));
       } else if (e.key === "Enter" && selectedRowIndex !== null) {
-        router.push(`/client/edit/${sortedData[selectedRowIndex]._id}`);
+        router.push(`/client/form/edit/${sortedData[selectedRowIndex]._id}`);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -160,20 +160,21 @@ const AppTableData = ({
       <TableContainer
         ref={scrollContainerRef}
         sx={{
-          maxHeight: "77vh",
+          maxHeight: "79vh",
           overflowY: "auto",
         }}
       >
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {columns.map((col) => (
+              {columns.map((col, index) => (
                 <TableCell
-                  key={col.accessorKey}
+                  key={index}
                   sx={{
                     color: isDark ? "#fff" : "#000",
                     fontWeight: "bold",
                     backgroundColor: isDark ? "#2A2A2A" : "#f5f5f5",
+                    border: '0'
                   }}
                 >
                   <TableSortLabel
@@ -197,6 +198,7 @@ const AppTableData = ({
                   color: isDark ? "#fff" : "#000",
                   fontWeight: "bold",
                   backgroundColor: isDark ? "#2A2A2A" : "#f5f5f5",
+                  border: '0'
                 }}
               >
                 Action

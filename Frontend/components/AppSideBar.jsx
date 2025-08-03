@@ -34,6 +34,7 @@ import {
   Sun,
   User,
   User2,
+  User2Icon,
   Users,
   X,
 } from "lucide-react";
@@ -85,27 +86,18 @@ export default function AppSidebar(props) {
       headOne: "All Clients",
       iconOne: <Users />,
       linkOne: "/client",
-      headTwo: "Add New Client",
-      iconTwo: <Plus />,
-      linkTwo: "/client/form/create",
     },
     {
       label: "Projects",
       headOne: "All Projects",
       iconOne: <FileJson2 />,
       linkOne: "/project",
-      headTwo: "Add New Project",
-      iconTwo: <Plus />,
-      linkTwo: "/project/form/create",
     },
     {
       label: "Invoices",
       headOne: "All Invoices",
       iconOne: <ScrollText />,
       linkOne: "/invoice",
-      headTwo: "Add New Invoice",
-      iconTwo: <Plus />,
-      linkTwo: "/invoice/form/create",
     },
     {
       label: "Reports",
@@ -209,9 +201,6 @@ export default function AppSidebar(props) {
 
           {data.map((item, index) => (
             <SidebarGroup key={index + 1}>
-              <SidebarGroupLabel className={"text-[15px]"}>
-                {item.label}
-              </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
@@ -227,21 +216,6 @@ export default function AppSidebar(props) {
                           {item.iconOne}
                         </span>
                         <span className="">{item.headOne}</span>
-                      </Link>
-                    </SidebarMenuButton>
-
-                    <SidebarMenuButton
-                      asChild
-                      className={`py-4 mt-1 ${
-                        pathname === item.linkTwo &&
-                        "dark:bg-[#262626] dark:text-white border-2 bg-[#FFFFFF] text-black"
-                      }`}
-                    >
-                      <Link href={item.linkTwo} className="flex gap-3 ">
-                        <span className=" text-base rounded">
-                          {item.iconTwo}
-                        </span>
-                        <span className="">{item.headTwo}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -275,7 +249,9 @@ export default function AppSidebar(props) {
                   <DropdownMenuItem onClick={() => setShowBox(true)}>
                     Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
@@ -304,7 +280,7 @@ export default function AppSidebar(props) {
                   <span>General</span>
                 </button>
                 <button className="w-full flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-zinc-700 px-3 py-2 rounded-lg transition">
-                  <User size={20} />
+                  <User2Icon size={20} />
                   <span>Account</span>
                 </button>
               </nav>

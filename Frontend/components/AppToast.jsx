@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-export const showSuccessToast = ({ heading, message, icon } = {}) => {
+export const showSuccessToast = ({ heading, message, icon = "✅" } = {}) => {
   toast(
     <div className="text-white space-y-1">
       <p className="font-semibold">{heading}</p>
@@ -17,7 +17,7 @@ export const showSuccessToast = ({ heading, message, icon } = {}) => {
   );
 };
 
-export const showErrorToast = ({ heading, message, icon = "⚠️" } = {}) => {
+export const showErrorToast = ({ heading, message, icon = "❌" } = {}) => {
   toast(
     <div className="text-white space-y-1">
       <p className="font-semibold">{heading}</p>

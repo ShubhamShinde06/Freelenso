@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Grip, Plus } from "lucide-react";
 
-const AppNavBar = () => {
+const AppNavBar = ({ setShowForm, searchTerm, setSearchTerm}) => {
   const [ShowBox, setShowBox] = useState(false);
    const boxRef = useRef(null);
 
@@ -32,6 +32,8 @@ const AppNavBar = () => {
           type="text"
           placeholder="Search..."
           className="bg-transparent px-2 outline-0 border-0 w-full h-full dark:text-white dark:placeholder:text-white text-black placeholder:text-black"
+          value={searchTerm}
+          onChange={(e)=>setSearchTerm(e.target.value)}
         />
       </div>
 
@@ -55,7 +57,7 @@ const AppNavBar = () => {
           </div>
         )}
 
-        <Button className="dark:bg-[#262626] dark:text-white border bg-[#FFFFFF] text-black cursor-pointer hover:bg-transparent">
+        <Button onClick={()=>setShowForm(true)} className="dark:bg-[#262626] dark:text-white border bg-[#FFFFFF] text-black cursor-pointer hover:bg-transparent">
           <span>
             <Plus />
           </span>{" "}
