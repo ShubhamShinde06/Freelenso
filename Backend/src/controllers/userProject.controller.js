@@ -118,7 +118,6 @@ export const userProjectPut = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Project updated successfully",
-      data: updatedClient,
     });
   } catch (error) {
     return ErrorHandler(res, "Update failed", error.message, 500);
