@@ -86,8 +86,11 @@ export default function ClientPage() {
     id: index + 1,
     _id: client._id,
     avatar: (
-      <Avatar sx={{ width: 32, height: 32, fontSize: 14, background: 'orange' }}>
-        {client.firstName?.[0] ?? ""}{client.lastName?.[0] ?? ""}
+      <Avatar
+        sx={{ width: 32, height: 32, fontSize: 14, background: "orange" }}
+      >
+        {client.firstName?.[0] ?? ""}
+        {client.lastName?.[0] ?? ""}
       </Avatar>
     ),
     firstName: `${client.firstName} ${client.lastName}`,
@@ -108,7 +111,7 @@ export default function ClientPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 overflow-hidden">
       <div>
         <AppNavBar
           showForm={showForm}
@@ -125,6 +128,7 @@ export default function ClientPage() {
           loading={isLoading && page === 1}
           loadingMore={loadingMore}
           columns={columns}
+          page={'client'}
         />
       </div>
 

@@ -1,28 +1,134 @@
 "use client";
 
-import React from "react";
-import { Button, TextField } from "@mui/material";
-import { File, Send } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { File } from "lucide-react";
+import {
+  useClientsGetQuery,
+  useProjectCreateMutation,
+  useProjectGetSingleQuery,
+  useProjectPutMutation,
+} from "@/store/api/apiSlice";
+import { useSelector } from "react-redux";
+import { showErrorToast, showSuccessToast } from "../AppToast";
+import { initSocket } from "@/lib/socket";
 
-const textFieldStyle = {
-  input: { color: "white" },
-  label: { color: "gray" },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "#444" },
-    "&:hover fieldset": { borderColor: "#888" },
-    "&.Mui-focused fieldset": { borderColor: "#999" },
-  },
-  "& .MuiInputBase-root": {
-    color: "white",
-    backgroundColor: "#1e1e1e",
-  },
-};
+const CreateProjectForm = ({ setShowForm, id }) => {
+  const User = useSelector((state) => state?.globalState?.User);
+  const userId = User?._id;
 
-const handleClose = () => {
-  window.history.back();
-};
+  //APIs
+  const { data: clients } = useClientsGetQuery(userId, { skip: !userId });
+  const {
+    data: singleProject,
+    isLoading,
+    isError,
+    refetch,
+  } = useProjectGetSingleQuery(id, { skip: !id });
+  const [projectPost, { isLoadingPost }] = useProjectCreateMutation();
+  const [projectPut, { isLoadingPut }] = useProjectPutMutation();
 
-const CreateProjectForm = () => {
+  const [form, setForm] = useState({
+    projectName: "",
+    projectDesc: "",
+    client: "",
+    startDate: "",
+    endDate: "",
+    budget: "",
+    projectStatus: "",
+  });
+  const resetForm = () => {
+    setForm({
+      projectName: "",
+      projectDesc: "",
+      client: "",
+      startDate: "",
+      endDate: "",
+      budget: "",
+      projectStatus: "",
+    });
+  };
+
+  useEffect(() => {
+    if (!id || !singleProject?.data) return;
+
+    const {
+      projectName = "",
+      projectDesc = "",
+      client = "",
+      startDate = "",
+      endDate = "",
+      budget = "",
+      projectStatus = "",
+    } = singleProject.data;
+
+    const formatDate = (dateStr) => (dateStr ? dateStr.split("T")[0] : "");
+
+    setForm({
+      projectName,
+      projectDesc,
+      client,
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
+      budget,
+      projectStatus,
+    });
+  }, [id, singleProject]);
+
+  useEffect(() => {
+    const socket = initSocket();
+
+    socket.on("project:updated", () => {
+      refetch();
+    });
+
+    return () => {
+      socket.off("project:updated");
+    };
+  }, [refetch]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleClose = () => {
+    id ? window.history.back() : setShowForm(false);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const projectData = {
+      ...form,
+      user: userId,
+    };
+
+    try {
+      if (id) {
+        const res = await projectPut({ projectData, id });
+        showSuccessToast({
+          heading: "Project Updated" || res.data.message,
+        });
+      } else {
+        const res = await projectPost({ projectData });
+
+        showSuccessToast({
+          heading: "New Project Created" || res.data.message,
+        });
+        resetForm();
+      }
+    } catch (error) {
+      console.warn("Project", error);
+      showErrorToast({
+        heading: error?.message || "Something went wrong",
+      });
+    }
+  };
+
+  if (id && isLoading) return <div>Loading...</div>;
+  if (id && isError) return <div>Error fetching project</div>;
+
   return (
     <div className="min-h-[calc(100vh-64px)] w-full  flex items-center justify-center p-4 ">
       <div className="w-full md:w-[760px]  bg-[#1e1e1e] rounded-2xl shadow-lg p-6 sm:p-8 space-y-8">
@@ -50,121 +156,148 @@ const CreateProjectForm = () => {
           </button>
         </div>
 
-        {/* Project Title */}
-        <div className="grid grid-cols-1">
-          <TextField
-            label="Project Title"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-          />
-        </div>
+        <form onSubmit={handleFormSubmit} className="space-y-4">
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              name="projectName"
+              className="py-2 px-2 border rounded-md"
+              value={form.projectName}
+              placeholder="Project Name"
+              onChange={handleChange}
+            />
+          </div>
 
-        {/* Description */}
-        <div className="grid grid-cols-1">
-          <TextField
-            label="Project Description"
-            variant="outlined"
-            size="small"
-            multiline
-            minRows={3}
-            sx={textFieldStyle}
-            fullWidth
-          />
-        </div>
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              name="projectDesc"
+              className="py-2 px-2 border rounded-md"
+              value={form.projectDesc}
+              placeholder="Project Description"
+              onChange={handleChange}
+            />
+          </div>
 
-        {/* Client Info */}
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-          <TextField
-            label="Select Client"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-          />
-          <TextField
-            label="Start Date"
-            type="date"
-            size="small"
-            sx={{
-              ...textFieldStyle,
-              "& label": { color: "gray" },
-            }}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
-          />
-          <TextField
-            label="End Date"
-            type="date"
-            size="small"
-            sx={{
-              ...textFieldStyle,
-              "& label": { color: "gray" },
-            }}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
-          />
-        </div>
+          <div className="flex flex-col gap-2">
+            <select
+              name="client"
+              value={form.client}
+              onChange={handleChange}
+              className="py-2 px-3 rounded-md border   bg-white dark:bg-[#1e1e1e] text-gray-800 dark:text-white  transition-all"
+            >
+              <option value="" disabled className="text-gray-400">
+                Select Client
+              </option>
 
-        {/* Budget + Status */}
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-          <TextField
-            label="Budget (₹)"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-          />
-          <TextField
-            label="Project Status"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-          />
-        </div>
+              {clients?.data.map((c) => (
+                <option
+                  key={c._id}
+                  value={c._id}
+                  className="bg-white text-black dark:bg-[#1e1e1e] dark:text-white"
+                >
+                  {c.firstName + " " + c.lastName}
+                </option>
+              ))}
 
-        {/* Buttons */}
+              <option disabled>──────────────</option>
 
-        <div className="flex  gap-4">
-          <Button
-            variant="outlined"
-            sx={{
-              borderColor: "#444",
-              color: "white",
-              textTransform: "none",
-              borderRadius: "8px",
-              "&:hover": {
-                borderColor: "#888",
-                backgroundColor: "#2a2a2a",
-              },
-              width: "50%",
-            }}
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
+              <option
+                value=""
+                className="bg-white text-blue-600 dark:bg-[#1e1e1e] dark:text-blue-400 font-semibold"
+              >
+                + Add New Client
+              </option>
+            </select>
+          </div>
 
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              backgroundColor: "#3b82f6",
-              color: "white",
-              textTransform: "none",
-              borderRadius: "8px",
-              fontWeight: "bold",
-              "&:hover": {
-                backgroundColor: "#2563eb",
-              },
-              width: "50%",
-            }}
-            endIcon={<Send />}
-          >
-            Save
-          </Button>
-        </div>
+          <div className="flex flex-col gap-2">
+            <input
+              type="date"
+              name="startDate"
+              className="py-2 px-2 border rounded-md"
+              value={form.startDate}
+              placeholder="Start Date"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <input
+              type="date"
+              name="endDate"
+              className="py-2 px-2 border rounded-md"
+              value={form.endDate}
+              placeholder="End Date"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              name="budget"
+              className="py-2 px-2 border rounded-md"
+              value={form.budget}
+              placeholder="Budget"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <select
+              name="projectStatus"
+              value={form.projectStatus}
+              onChange={handleChange}
+              className="py-2 px-2 border rounded-md"
+            >
+              <option
+                className="bg-white text-black dark:bg-black dark:text-white "
+                value=""
+              >
+                Select Status
+              </option>
+              <option
+                className="bg-white text-black dark:bg-black dark:text-white"
+                value="Pending"
+              >
+                Pending
+              </option>
+              <option
+                className="bg-white text-black dark:bg-black dark:text-white"
+                value="In Progress"
+              >
+                In Progress
+              </option>
+              <option
+                className="bg-white text-black dark:bg-black dark:text-white"
+                value="Completed"
+              >
+                Completed
+              </option>
+              <option
+                className="bg-white text-black dark:bg-black dark:text-white"
+                value="Cancelled"
+              >
+                Cancelled
+              </option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex items-center gap-4 mt-4">
+            <Button
+              type="button"
+              className="w-1/2 h-10 bg-transparent border dark:text-white text-black hover:bg-gray-600 cursor-pointer"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="w-1/2 h-10 cursor-pointer">
+              {isLoadingPost || isLoadingPut ? "Loading..." : "Save"}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

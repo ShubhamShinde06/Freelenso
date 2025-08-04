@@ -72,8 +72,7 @@ const ClientForm = ({ setShowForm, id }) => {
   const User = useSelector((state) => state?.globalState?.User);
 
   // APIs
-  const [clientPost, { isLoadingPost, isErrorPost }] =
-    useClientCreateMutation();
+  const [clientPost, { isLoadingPost, isErrorPost }] =  useClientCreateMutation();
   const [clientPut, { isLoadingPut, isErrorPut }] = useClientPutMutation();
   const {
     data: singleClient,

@@ -146,3 +146,31 @@ export const userClientPut = async (req, res) => {
     return ErrorHandler(res, "Update failed", error.message, 500);
   }
 };
+
+export const userClients = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    return ErrorHandler(res, "User ID not provided", 404);
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid User ID", 400);
+  }
+
+  try {
+    const clients = await Client.find({ user: userId }).select("firstName lastName _id");
+
+    if (!clients || clients.length === 0) {
+      return ErrorHandler(res, "No clients found", 404);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: clients,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Get clients failed", error.message, 500);
+  }
+};
+

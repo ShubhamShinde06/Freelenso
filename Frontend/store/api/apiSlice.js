@@ -43,6 +43,35 @@ const apiMain = apiSlice.injectEndpoints({
         body: clientData,
       }),
     }),
+    clientsGet: builder.query({
+      query: (userId) => `/client/get/${userId}`,
+    }),
+
+    //Project
+    projectCreate: builder.mutation({
+      query: (projectData) => ({
+        url: `/project/create`,
+        method: "POST",
+        body: projectData,
+      }),
+    }),
+    projectGet: builder.mutation({
+      query: (data) => ({
+        url: "/project/all/user-project",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    projectGetSingle: builder.query({
+      query: (id) => `/project/single/user-project/${id}`,
+    }),
+    projectPut: builder.mutation({
+      query: ({projectData, id}) => ({
+        url: `/project/update/${id}`,
+        method: "PUT",
+        body: projectData,
+      }),
+    }),
   
   }),
   
@@ -55,6 +84,12 @@ export const {
   useClientCreateMutation,
   useClientGetMutation,
   useClientGetSingleQuery,
-  useClientPutMutation
+  useClientPutMutation,
+  useClientsGetQuery,
+
+  useProjectCreateMutation,
+  useProjectGetMutation,
+  useProjectGetSingleQuery,
+  useProjectPutMutation
 } = apiMain;
 export default apiMain;

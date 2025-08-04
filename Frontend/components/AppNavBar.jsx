@@ -49,7 +49,7 @@ const AppNavBar = ({ setShowForm, searchTerm, setSearchTerm}) => {
             ref={boxRef}
              className={`absolute w-[200px] min-h-[120px] rounded-2xl bg-[#262626] top-[140px] right-[160px]
               transition-all duration-300 ease-in-out shadow-lg text-white p-2 flex flex-col gap-2  justify-center 
-              ${ShowBox ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+              ${ShowBox ? "opacity-100 scale-100 z-10" : "opacity-0 scale-95"}`}
           >
             <Button className="dark:bg-[#262626] dark:text-white border bg-[#FFFFFF] text-black cursor-pointer hover:bg-[#171717]">PDF</Button>
             <Button className="dark:bg-[#262626] dark:text-white border bg-[#FFFFFF] text-black cursor-pointer hover:bg-transparent">IMPORT EXCEL</Button>

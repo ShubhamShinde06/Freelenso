@@ -33,6 +33,7 @@ const AppTableData = ({
   hasMore = false,
   onDelete,
   onEdit,
+  page
 }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -116,7 +117,7 @@ const AppTableData = ({
       } else if (e.key === "ArrowUp") {
         setSelectedRowIndex((prev) => Math.max((prev ?? 1) - 1, 0));
       } else if (e.key === "Enter" && selectedRowIndex !== null) {
-        router.push(`/client/form/edit/${sortedData[selectedRowIndex]._id}`);
+        router.push(`/${page}/form/edit/${sortedData[selectedRowIndex]._id}`);
       }
     };
     window.addEventListener("keydown", handleKeyDown);

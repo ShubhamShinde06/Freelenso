@@ -161,7 +161,7 @@ export default function AppSidebar(props) {
                   {/* Logo Text/Name */}
                   <div className="relative w-[140px] h-[60px]">
                     <Image
-                      src="/logo.png"
+                      src="/logo.webp"
                       alt="Logo Text"
                       fill
                       priority

@@ -39,4 +39,7 @@ app.use("/api/auth", userRouter);
 import clientRouter from "./routes/userClient.route.js";
 app.use("/api/client", clientRouter);
 
+import projectRouter from "./routes/userProject.route.js";
+app.use("/api/project", projectRouter);
+
 export { app, server };
