@@ -1,56 +1,183 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, MenuItem, TextField } from "@mui/material";
 import { ReceiptText, Send } from "lucide-react";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceSummary from "./InvoiceSummary";
 import InvoiceNotes from "./InvoiceNotes";
+import { useSelector } from "react-redux";
+import {
+  useClientsGetQuery,
+  useInvoiceCreateMutation,
+  useInvoiceGetSingleQuery,
+  useInvoicePutMutation,
+  useProjectsGetQuery,
+} from "@/store/api/apiSlice";
+import { showErrorToast, showSuccessToast } from "../AppToast";
+import { useRouter } from "next/navigation";
 
-const textFieldStyle = {
-  input: { color: "white" },
-  label: { color: "gray" },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "#444" },
-    "&:hover fieldset": { borderColor: "#888" },
-    "&.Mui-focused fieldset": { borderColor: "#999" },
-  },
-  "& .MuiInputBase-root": {
-    color: "white",
-    backgroundColor: "#1e1e1e",
-  },
-};
+const InvoiceForm = ({ id, setShowForm }) => {
+  const today = new Date().toISOString().split("T")[0];
+  const User = useSelector((state) => state?.globalState?.User);
+  const userId = User?._id;
+  const router = useRouter()
 
-const handleClose = () => {
-  window.history.back();
-};
-
-const today = new Date().toISOString().split("T")[0];
-
-const InvoiceForm = () => {
   const [form, setForm] = useState({
     client: "",
     dueDate: today,
     items: [
       {
-        projectTitle: "",
-        hours: 0,
-        rate: 0,
+        project: "",
+        hours: "",
+        rate: "",
         total: 0,
       },
     ],
-    subtotal: 0,
-    tax: 0,
-    discount: 0,
+    subtotal: "",
+    tax: "",
+    discount: "",
     grandTotal: 0,
     notes: "",
+    status: "",
   });
+  const resetForm = () => {
+    setForm({
+      client: "",
+      dueDate: today,
+      items: [
+        {
+          project: "",
+          hours: "",
+          rate: "",
+          total: 0,
+        },
+      ],
+      subtotal: "",
+      tax: "",
+      discount: "",
+      grandTotal: 0,
+      notes: "",
+      status: "",
+    });
+  };
 
-  const demoClients = [
-    { id: 1, name: "Shubham Singh" },
-    { id: 2, name: "Billy Butcher" },
-    { id: 3, name: "Tony Stark" },
-  ];
+  const clientId = form.client;
+
+  //APIs
+  const { data: clients } = useClientsGetQuery(userId, { skip: !userId });
+  const { data: projects } = useProjectsGetQuery(clientId, { skip: !clientId });
+  const { data: singleData, refetch } = useInvoiceGetSingleQuery(id, { skip: !id });
+  const [invoicePost, { isLoading: isLoadingPost }] =  useInvoiceCreateMutation();
+  const [invoicePut, { isLoading: isLoadingPut }] = useInvoicePutMutation();
+
+  useEffect(() => {
+    if (!id || !singleData?.data) return;
+
+    const {
+      client = "",
+      dueDate = "",
+      items = [],
+      subtotal = "",
+      tax = "",
+      discount = "",
+      grandTotal = 0,
+      notes = "",
+      status = "",
+    } = singleData.data;
+
+    const formatDate = (dateStr) => (dateStr ? dateStr.split("T")[0] : "");
+
+    setForm({
+      client,
+      dueDate: formatDate(dueDate),
+      items: Array.isArray(items)
+        ? items.map((item) => ({
+            project: item.project || "",
+            hours: item.hours || "",
+            rate: item.rate || "",
+            total: item.total || 0,
+          }))
+        : [],
+      subtotal,
+      tax,
+      discount,
+      grandTotal,
+      notes,
+      status,
+    });
+  }, [id, singleData]);
+
+  useEffect(() => {
+    if (id) return; // skip this effect in edit mode
+
+    if (clients?.length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        client: clients[0]._id,
+      }));
+    }
+
+    if (projects?.length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        items: [
+          {
+            project: projects[0]._id,
+            hours: "",
+            rate: "",
+            total: 0,
+          },
+        ],
+      }));
+    }
+  }, [clients, projects, id]);
+
+  const handleFormSubmit = async (e) => {
+  e.preventDefault();
+
+  // Clean up items: remove incomplete, convert to numbers
+  const cleanedItems = form.items
+    .filter(item => item.project && item.hours && item.rate)
+    .map(item => ({
+      ...item,
+      hours: Number(item.hours),
+      rate: Number(item.rate),
+      total: Number(item.total),
+    }));
+
+  const invoiceData = {
+    ...form,
+    items: cleanedItems,
+    user: userId,
+  };
+
+  try {
+    if (id) {
+      const res = await invoicePut({ invoiceData, id });
+      await refetch();
+      showSuccessToast({
+        heading: "Invoice Updated" || res.data.message,
+      });
+      console.log(invoiceData);
+    } else {
+      const res = await invoicePost({ invoiceData });
+      showSuccessToast({
+        heading: "New Invoice Created" || res.data.message,
+      });
+      resetForm();
+    }
+  } catch (error) {
+    console.warn("Invoice", error);
+    showErrorToast({
+      heading: error?.message || "Something went wrong",
+    });
+  }
+};
+
+  const handleClose = () => {
+    id ? window.history.back() : setShowForm(false);
+  };
 
   return (
     <div className="w-full md:w-[720px] mx-auto bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl shadow-xl">
@@ -78,43 +205,60 @@ const InvoiceForm = () => {
       </div>
 
       {/* Form */}
-      <form className="space-y-8">
+      <form onSubmit={handleFormSubmit} className="space-y-4">
         <div className="grid grid-cols-1 gap-6">
           {/* Client Select */}
-          <TextField
-            select
-            name="client"
-            label="Select Client"
-            variant="outlined"
-            size="small"
-            sx={textFieldStyle}
-            fullWidth
-            value={form.client}
-            onChange={(e) => setForm({ ...form, client: e.target.value })}
-          >
-            {demoClients.map((client) => (
-              <MenuItem key={client.id} value={client.name}>
-                {client.name}
-              </MenuItem>
-            ))}
-          </TextField>
+          <div className="flex flex-col gap-2">
+            <select
+              name="client"
+              value={form.client}
+              onChange={(e) => setForm({ ...form, client: e.target.value })}
+              className="py-2 px-3 rounded-md border   bg-white dark:bg-[#1e1e1e] text-gray-800 dark:text-white  transition-all"
+            >
+              <option value="" disabled className="text-gray-400">
+                Select Client
+              </option>
+
+              {clients?.data.map((c) => (
+                <option
+                  key={c._id}
+                  value={c._id}
+                  className="bg-white text-black dark:bg-[#1e1e1e] dark:text-white"
+                >
+                  {c.firstName + " " + c.lastName}
+                </option>
+              ))}
+
+              <option disabled>
+                ──────────────────────────────────────────────────────────────────────
+              </option>
+
+              <option
+                value=""
+                className="bg-white text-blue-600 dark:bg-[#1e1e1e] dark:text-blue-400 font-semibold"
+              >
+                + Add New Client
+              </option>
+            </select>
+          </div>
 
           {/* Due Date */}
-          <TextField
-            label="Due Date"
-            type="date"
-            size="small"
-            sx={textFieldStyle}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
-            value={form.endDate}
-            onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-          />
+          <div className="flex flex-col gap-2">
+            <input
+              type="date"
+              name="startDate"
+              className="py-2 px-2 border rounded-md"
+              value={form.dueDate}
+              placeholder="Start Date"
+              onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+            />
+          </div>
         </div>
 
         {/* Invoice Items */}
         <InvoiceItem
           items={form.items}
+          projects={projects}
           onChange={(updatedItems, subtotal) => {
             const grandTotal =
               subtotal + Number(form.tax) - Number(form.discount);
@@ -140,10 +284,27 @@ const InvoiceForm = () => {
           }}
         />
 
-        <InvoiceNotes
-          value={form.notes}
-          onChange={(val) => handleChange("notes", val)}
-        />
+        <div>
+          <select
+            name="status"
+            value={form.status}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+            className="py-2 px-3 rounded-md border   bg-white dark:bg-[#1e1e1e] text-gray-800 dark:text-white  transition-all"
+          >
+            <option value="Paid">Paid</option>
+            <option value="Not Paid">Not Paid</option>
+          </select>
+        </div>
+
+        <div>
+          <textarea
+            type="text"
+            className="py-2 px-2 border rounded-md w-full"
+            placeholder="Notes"
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
+        </div>
 
         {/* Actions */}
         <div className="flex gap-4">
@@ -165,6 +326,26 @@ const InvoiceForm = () => {
             Cancel
           </Button>
 
+          {id && (
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: "#444",
+                color: "white",
+                textTransform: "none",
+                borderRadius: "8px",
+                "&:hover": {
+                  borderColor: "#888",
+                  backgroundColor: "#2a2a2a",
+                },
+                width: "30%",
+              }}
+              onClick={() => router.push(`/invoice-print-send/${id}`)}
+            >
+              Print
+            </Button>
+          )}
+
           <Button
             type="submit"
             variant="contained"
@@ -178,11 +359,10 @@ const InvoiceForm = () => {
                 backgroundColor: "#2563eb",
               },
               width: "70%",
-                height: '40px'
+              height: "40px",
             }}
-            endIcon={<Send />}
           >
-            Save
+            {isLoadingPost || isLoadingPut ? "Loading..." : "Save"}
           </Button>
         </div>
       </form>

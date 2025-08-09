@@ -72,6 +72,36 @@ const apiMain = apiSlice.injectEndpoints({
         body: projectData,
       }),
     }),
+    projectsGet: builder.query({
+      query: (clientId) => `/project/get/${clientId}`,
+    }),
+
+
+    //Invoice
+    invoiceCreate: builder.mutation({
+      query: (invoiceData) => ({
+        url: `/invoice/create`,
+        method: "POST",
+        body: invoiceData,
+      }),
+    }),
+    invoiceGet: builder.mutation({
+      query: (data) => ({
+        url: "/invoice/all/user-invoice",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    invoiceGetSingle: builder.query({
+      query: (id) => `/invoice/single/user-invoice/${id}`,
+    }),
+    invoicePut: builder.mutation({
+      query: ({invoiceData, id}) => ({
+        url: `/invoice/update/${id}`,
+        method: "PUT",
+        body: {invoiceData},
+      }),
+    }),
   
   }),
   
@@ -90,6 +120,12 @@ export const {
   useProjectCreateMutation,
   useProjectGetMutation,
   useProjectGetSingleQuery,
-  useProjectPutMutation
+  useProjectPutMutation,
+  useProjectsGetQuery,
+
+  useInvoiceCreateMutation,
+  useInvoiceGetMutation,
+  useInvoiceGetSingleQuery,
+  useInvoicePutMutation
 } = apiMain;
 export default apiMain;

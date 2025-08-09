@@ -223,8 +223,8 @@ const AppTableData = ({
                     <TableCell
                       key={col.accessorKey}
                       align={
-                        ["projects", "invoices"].includes(col.accessorKey)
-                          ? "right"
+                        ["invoices"].includes(col.accessorKey)
+                          ? "left"
                           : col.accessorKey === "avatar"
                           ? "center"
                           : "left"

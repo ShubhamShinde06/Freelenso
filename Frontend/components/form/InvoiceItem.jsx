@@ -1,31 +1,29 @@
 import { TextField, IconButton, Button } from "@mui/material";
 import { Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const textFieldStyle = {
-  input: { color: "white" },
-  label: { color: "gray" },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "#444" },
-    "&:hover fieldset": { borderColor: "#888" },
-    "&.Mui-focused fieldset": { borderColor: "#999" },
-  },
-  "& .MuiInputBase-root": {
-    color: "white",
-    backgroundColor: "#1e1e1e",
-  },
-};
 
-const InvoiceItem = ({ items, onChange }) => {
+
+const InvoiceItem = ({ items, onChange, projects }) => {
   const [localItems, setLocalItems] = useState(items);
 
+    useEffect(() => {
+    setLocalItems(items);
+  }, [items]);
+
   const handleItemChange = (index, field, value) => {
-    const updated = [...localItems];
-    updated[index][field] = value;
-    updated[index].total = updated[index].hours * updated[index].rate;
-    setLocalItems(updated);
-    onChange(updated, updated.reduce((acc, curr) => acc + curr.total, 0));
-  };
+  const updated = [...localItems];
+  updated[index][field] = value;
+  // Ensure both are numbers
+  const hours = Number(updated[index].hours) || 0;
+  const rate = Number(updated[index].rate) || 0;
+  updated[index].total = hours * rate;
+  setLocalItems(updated);
+  onChange(
+    updated,
+    updated.reduce((acc, curr) => acc + Number(curr.total || 0), 0)
+  );
+};
 
   const addItem = () => {
     const newItem = { projectTitle: "", hours: 0, rate: 0, total: 0 };
@@ -37,47 +35,88 @@ const InvoiceItem = ({ items, onChange }) => {
   const removeItem = (index) => {
     const updated = localItems.filter((_, i) => i !== index);
     setLocalItems(updated);
-    onChange(updated, updated.reduce((acc, curr) => acc + curr.total, 0));
+    onChange(
+      updated,
+      updated.reduce((acc, curr) => acc + curr.total, 0)
+    );
   };
 
   return (
     <div className="space-y-2">
       {localItems?.map((item, index) => (
         <div className="grid grid-cols-9 gap-2 items-center" key={index}>
-          <TextField
-            label="Project Title"
-            size="small"
-            value={item.projectTitle}
-            onChange={(e) => handleItemChange(index, "projectTitle", e.target.value)}
-            sx={textFieldStyle}
-            className=" col-span-2"
-            fullWidth
-          />
-          <TextField
-            label="Hours"
-            size="small"
-            type="number"
-            value={item.hours}
-            onChange={(e) => handleItemChange(index, "hours", Number(e.target.value))}
-            sx={textFieldStyle}
-            className=" col-span-2"
-          />
-          <TextField
-            label="Rate"
-            size="small"
-            type="number"
-            value={item.rate}
-            onChange={(e) => handleItemChange(index, "rate", Number(e.target.value))}
-            sx={textFieldStyle}
-            className=" col-span-2"
-          />
-          <TextField
-            label="Total"
-            size="small"
-            value={item.total}
-            sx={textFieldStyle}
-            className=" col-span-2"
-          />
+          <div className="flex flex-col gap-2 col-span-2">
+            <select
+              name="project"
+              value={item.project}
+              onChange={(e) =>
+                handleItemChange(index, "project", e.target.value)
+              }
+              className="py-2 px-3 rounded-md border   bg-white dark:bg-[#1e1e1e] text-gray-800 dark:text-white  transition-all"
+            >
+              <option value="" disabled className="text-gray-400">
+                Select Project
+              </option>
+
+              {projects?.data.map((p) => (
+                <option
+                  key={p._id}
+                  value={p._id}
+                  className="bg-white text-black dark:bg-[#1e1e1e] dark:text-white"
+                >
+                  {p.projectName}
+                </option>
+              ))}
+
+              <option disabled>
+                ──────────────────────────────────────────────────────────────────────
+              </option>
+
+              <option
+                value=""
+                className="bg-white text-blue-600 dark:bg-[#1e1e1e] dark:text-blue-400 font-semibold"
+              >
+                + Add New Project
+              </option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2 col-span-2">
+            <input
+              type="number"
+              name="budget"
+              className="  py-2 px-2 border rounded-md"
+              placeholder="Hours"
+              value={item.hours}
+              onChange={(e) =>
+                handleItemChange(index, "hours", Number(e.target.value))
+              }
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 col-span-2">
+            <input
+              type="number"
+              name="budget"
+              className="  py-2 px-2 border rounded-md"
+              placeholder="Rate"
+              value={item.rate}
+              onChange={(e) =>
+                handleItemChange(index, "rate", Number(e.target.value))
+              }
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 col-span-2">
+            <input
+              type="number"
+              name="budget"
+              className=" py-2 px-2 border rounded-md"
+              placeholder="Total"
+              value={item.total}
+              readOnly={true}
+            />
+          </div>
           <IconButton onClick={() => removeItem(index)}>
             <X className="text-red-500 col-span-1" />
           </IconButton>

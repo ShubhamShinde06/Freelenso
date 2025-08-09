@@ -123,3 +123,30 @@ export const userProjectPut = async (req, res) => {
     return ErrorHandler(res, "Update failed", error.message, 500);
   }
 };
+
+export const userProjects = async (req, res) => {
+  const { clientId } = req.params;
+
+  if (!clientId) {
+    return ErrorHandler(res, "Client ID not provided", 404);
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(clientId)) {
+    return ErrorHandler(res, "Invalid User ID", 400);
+  }
+
+  try {
+    const projects = await Project.find({ client: clientId })
+
+    if (!projects || projects.length === 0) {
+      return ErrorHandler(res, "No projects found", 404);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Get projects failed", error.message, 500);
+  }
+};

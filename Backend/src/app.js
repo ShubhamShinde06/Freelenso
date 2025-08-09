@@ -42,4 +42,7 @@ app.use("/api/client", clientRouter);
 import projectRouter from "./routes/userProject.route.js";
 app.use("/api/project", projectRouter);
 
+import invoiceRouter from "./routes/userInvoice.route.js";
+app.use("/api/invoice", invoiceRouter);
+
 export { app, server };

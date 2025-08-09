@@ -17,30 +17,39 @@ const textFieldStyle = {
 const InvoiceSummary = ({ tax, discount, grandTotal, onChange }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <TextField
-        label="Tax"
-        type="number"
-        size="small"
-        value={tax}
-        onChange={(e) => onChange("tax", Number(e.target.value))}
-        sx={textFieldStyle}
-      />
-      <TextField
-        label="Discount"
-        type="number"
-        size="small"
-        value={discount}
-        onChange={(e) => onChange("discount", Number(e.target.value))}
-        sx={textFieldStyle}
-      />
-      <TextField
-        label="Grand Total"
-        type="number"
-        size="small"
-        value={grandTotal}
-        
-        sx={textFieldStyle}
-      />
+      <div className="flex flex-col gap-2">
+        <input
+          type="number"
+          name="budget"
+          className="  py-2 px-2 border rounded-md"
+          placeholder="Tax"
+          value={tax}
+          onChange={(e) => onChange("tax", Number(e.target.value))}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <input
+          type="number"
+          name="budget"
+          className="  py-2 px-2 border rounded-md"
+          placeholder="Discount"
+          value={discount}
+          onChange={(e) => onChange("discount", Number(e.target.value))}
+        />
+      </div>
+
+
+      <div className="flex flex-col gap-2">
+        <input
+          type="number"
+          name="budget"
+          className="  py-2 px-2 border rounded-md"
+          placeholder="Discount"
+          value={grandTotal}
+          readOnly={true}
+        />
+      </div>
     </div>
   );
 };

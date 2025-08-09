@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { User2 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@mui/material";
 import {
   useClientCreateMutation,
   useClientGetSingleQuery,
@@ -72,8 +72,8 @@ const ClientForm = ({ setShowForm, id }) => {
   const User = useSelector((state) => state?.globalState?.User);
 
   // APIs
-  const [clientPost, { isLoadingPost, isErrorPost }] =  useClientCreateMutation();
-  const [clientPut, { isLoadingPut, isErrorPut }] = useClientPutMutation();
+  const [clientPost, { isLoading:isLoadingPost, isErrorPost }] =  useClientCreateMutation();
+  const [clientPut, { isLoading: isLoadingPut, isErrorPut }] = useClientPutMutation();
   const {
     data: singleClient,
     isLoading,
@@ -315,15 +315,44 @@ const ClientForm = ({ setShowForm, id }) => {
           />
         </div>
 
-        <div className="flex items-center gap-4 mt-4">
+       
+
+        {/* Actions */}
+        <div className="flex gap-4">
           <Button
-            type="button"
-            className="w-1/2 h-10 bg-transparent border dark:text-white text-black hover:bg-gray-600 cursor-pointer"
+            variant="outlined"
+            sx={{
+              borderColor: "#444",
+              color: "white",
+              textTransform: "none",
+              borderRadius: "8px",
+              "&:hover": {
+                borderColor: "#888",
+                backgroundColor: "#2a2a2a",
+              },
+              width: "30%",
+            }}
             onClick={handleClose}
           >
             Cancel
           </Button>
-          <Button type="submit" className="w-1/2 h-10 cursor-pointer">
+
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: "#3b82f6",
+              color: "white",
+              textTransform: "none",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: "#2563eb",
+              },
+              width: "70%",
+              height: "40px",
+            }}
+          >
             {isLoadingPost || isLoadingPut ? "Loading..." : "Save"}
           </Button>
         </div>

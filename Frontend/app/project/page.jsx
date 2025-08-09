@@ -87,14 +87,6 @@ export default function ProjectPage() {
   const data = allData?.map((p, index) => ({
     id: index + 1,
     _id: p._id,
-    // avatar: (
-    //   <Avatar
-    //     sx={{ width: 32, height: 32, fontSize: 14, background: "orange" }}
-    //   >
-    //     {p.client.firstName?.[0] ?? ""}
-    //     {p.client.lastName?.[0] ?? ""}
-    //   </Avatar>
-    // ),
     clientName: `${p.client.firstName} ${p.client.lastName}`,
     projectName: p.projectName,
     startDate: p.startDate
