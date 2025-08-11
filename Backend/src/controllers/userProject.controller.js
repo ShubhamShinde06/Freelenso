@@ -136,12 +136,37 @@ export const userProjects = async (req, res) => {
   }
 
   try {
-    const projects = await Project.find({ client: clientId })
+    const projects = await Project.find({ client: clientId });
 
     if (!projects || projects.length === 0) {
       return ErrorHandler(res, "No projects found", 404);
     }
 
+    return res.status(200).json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Get projects failed", error.message, 500);
+  }
+};
+
+export const userAllProjects = async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return ErrorHandler(res, "User ID not provided", 404);
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid User ID", 400);
+  }
+
+  try {
+    const projects = await Project.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .lean();
+    if (!projects || projects.length === 0) {
+      return ErrorHandler(res, "No projects found", 404);
+    }
     return res.status(200).json({
       success: true,
       data: projects,

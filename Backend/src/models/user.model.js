@@ -6,8 +6,9 @@ const userSchema = new mongoose.Schema(
     userEmail: { type: String, required: true, unique: true },
     userName: String,
     userPhoto: String,
+    userAddress: String,
     emailVerified: Boolean,
-    sessionId: String, //  Session ID stored here
+    sessionId: String, 
   },
   { timestamps: true }
 );

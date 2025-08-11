@@ -17,6 +17,17 @@ const apiMain = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    userPut: builder.mutation({
+      query: ({data, id}) => ({
+        url: `/auth/update/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    userGet: builder.query({
+      query: (id) => `/auth/get/${id}`,
+    }),
+
 
     //client
     clientCreate: builder.mutation({
@@ -65,6 +76,9 @@ const apiMain = apiSlice.injectEndpoints({
     projectGetSingle: builder.query({
       query: (id) => `/project/single/user-project/${id}`,
     }),
+    projectGetAll: builder.query({
+      query: (userId) => `/project/all/user-project/${userId}`,
+    }),
     projectPut: builder.mutation({
       query: ({projectData, id}) => ({
         url: `/project/update/${id}`,
@@ -95,6 +109,9 @@ const apiMain = apiSlice.injectEndpoints({
     invoiceGetSingle: builder.query({
       query: (id) => `/invoice/single/user-invoice/${id}`,
     }),
+    invoiceGetFullSingle: builder.query({
+      query: (id) => `/invoice/single/user-full-invoice/${id}`,
+    }),
     invoicePut: builder.mutation({
       query: ({invoiceData, id}) => ({
         url: `/invoice/update/${id}`,
@@ -110,6 +127,8 @@ const apiMain = apiSlice.injectEndpoints({
 export const {
   useUserSignMutation,
   useUserVerifyQuery,
+  useUserPutMutation,
+  useUserGetQuery,
 
   useClientCreateMutation,
   useClientGetMutation,
@@ -120,12 +139,14 @@ export const {
   useProjectCreateMutation,
   useProjectGetMutation,
   useProjectGetSingleQuery,
+  useProjectGetAllQuery,
   useProjectPutMutation,
   useProjectsGetQuery,
 
   useInvoiceCreateMutation,
   useInvoiceGetMutation,
   useInvoiceGetSingleQuery,
+  useInvoiceGetFullSingleQuery,
   useInvoicePutMutation
 } = apiMain;
 export default apiMain;

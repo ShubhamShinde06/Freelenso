@@ -1,10 +1,15 @@
 import {Router} from 'express'
-import { userLogout, userPost, userVerify } from '../controllers/user.controller.js'
+import { userGetByID, userLogout, userPost, userPut, userVerify } from '../controllers/user.controller.js'
 
 const router = Router()
 
 router.post('/sign', userPost)
-router.get('/verify', userVerify)
 router.post('/logout', userLogout)
+
+router.get('/verify', userVerify)
+router.get('/get/:id', userGetByID)
+
+router.put('/update/:id', userPut)
+
 
 export default router

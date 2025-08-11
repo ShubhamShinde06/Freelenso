@@ -3,7 +3,8 @@ import ErrorHandler from "../utils/error.utils.js";
 import crypto from "crypto";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
 import { encrypt } from "../utils/crypto.js";
-import jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateEncryptedSessionId = () => {
   const sessionId = crypto.randomUUID();
@@ -43,6 +44,8 @@ export const userPost = async (req, res) => {
     };
 
     const token = generateTokenAndSetCookie(res, payload);
+
+    global._io.emit("user:sign");
 
     return res.status(200).json({
       success: true,
@@ -95,11 +98,74 @@ export const userVerify = async (req, res) => {
 };
 
 export const userLogout = async (req, res) => {
-  res.clearCookie("side_to_side", { httpOnly: true, secure: true, sameSite: "None" });
+  res.clearCookie("side_to_side", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
   res.status(200).json({
     success: true,
     message: "Logged out successfully",
   });
 };
 
+export const userGetByID = async (req, res) => {
+  const { id } = req.params;
 
+  // Validate ID existence
+  if (!id) {
+    return ErrorHandler(res, "ID not provided", 401);
+  }
+
+  // Validate MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return ErrorHandler(res, "Invalid ID format", 402);
+  }
+
+  try {
+    const user = await User.findById({ _id: id });
+
+    if (!user) {
+      return ErrorHandler(res, "Client not found", 404);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Failed to fetch user", error.message, 500);
+  }
+};
+
+export const userPut = async (req, res) => {
+  const { id } = req.params;
+  const { userName, userAddress } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return ErrorHandler(res, "Invalid ID", 400);
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { userName, userAddress },
+      {
+        new: true,
+      }
+    );
+
+    if (!user) {
+      return ErrorHandler(res, "User not found", 404);
+    }
+
+    global._io.emit("User:updated");
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    return ErrorHandler(res, "userPut failed", 500, error.message);
+  }
+};

@@ -88,8 +88,9 @@ const AppTableData = ({
   };
 
   const handleEdit = (row) => {
-    onEdit?.(row);
     handleMenuClose();
+    console.log(row)
+    router.push(`${page}/form/edit/${row._id}`)
   };
 
   useEffect(() => {

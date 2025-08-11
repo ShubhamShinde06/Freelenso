@@ -178,7 +178,7 @@ const ClientForm = ({ setShowForm, id }) => {
     } catch (error) {
       console.warn("client post", error);
       showErrorToast({
-        heading: error?.message || "Something went wrong",
+        heading: error?.data.message || "Something went wrong",
       });
     }
   };

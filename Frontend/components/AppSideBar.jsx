@@ -21,40 +21,31 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import {
-  Atom,
   BanknoteArrowUp,
   ChevronUp,
   FileJson2,
-  Home,
   LayoutDashboard,
-  Moon,
   Plus,
   ScrollText,
-  Settings,
-  Sun,
-  User,
-  User2,
-  User2Icon,
   Users,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Button } from "./ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { setUser } from "@/store/global/globalState";
 import axios from "axios";
+import AppSetting from "./AppSetting";
 
 export default function AppSidebar(props) {
   const pathname = usePathname();
-  const [ShowBox, setShowBox] = useState(false);
-  const { setTheme } = useTheme();
   const User = useSelector((state) => state?.globalState?.User);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [ShowBox, setShowBox] = useState(false);
+ 
 
   const handleLogout = async () => {
     try {
@@ -99,20 +90,11 @@ export default function AppSidebar(props) {
       iconOne: <ScrollText />,
       linkOne: "/invoice",
     },
-    {
-      label: "Reports",
-      headOne: "Earnings Summary",
-      iconOne: <BanknoteArrowUp />,
-      linkOne: "",
-      headTwo: "Client Summary",
-      iconTwo: <Plus />,
-      linkTwo: "",
-    },
   ];
 
   return (
     <>
-      <Sidebar collapsible="icon" {...props}>
+      <Sidebar collapsible="icon" {...props} className={"print:hidden"}>
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -183,15 +165,15 @@ export default function AppSidebar(props) {
                   <SidebarMenuButton
                     asChild
                     className={`py-5 ${
-                      pathname === "/dashborad" &&
+                      pathname === "/dashboard" &&
                       "dark:bg-[#262626] dark:text-white border-2 bg-[#FFFFFF] text-black"
                     }`}
                   >
-                    <Link href={"/dashborad"} className="flex gap-3 ">
+                    <Link href={"/dashboard"} className="flex gap-3 ">
                       <span className="  text-base rounded">
                         <LayoutDashboard />
                       </span>
-                      <span className="">Dashborad</span>
+                      <span className="">Dashboard</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -245,7 +227,6 @@ export default function AppSidebar(props) {
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={"end"}>
-                  <DropdownMenuItem>Account</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setShowBox(true)}>
                     Settings
                   </DropdownMenuItem>
@@ -261,72 +242,9 @@ export default function AppSidebar(props) {
 
       {/* Modal Overlay */}
       {ShowBox && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full h-3/4 mx-4 lg:mx-0 lg:w-2/4 lg:h-2/3 bg-zinc-900 rounded-xl shadow-lg overflow-hidden flex flex-col lg:flex-row">
-            {/* Sidebar */}
-            <div className="w-full lg:w-1/3 h-1/3 lg:h-full bg-zinc-800 p-4 flex flex-col ">
-              <div className="flex justify-start">
-                <button
-                  onClick={() => setShowBox(false)}
-                  className="p-1 cursor-pointer text-zinc-400 hover:text-white hover:bg-zinc-700 rounded"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <nav className="space-y-2 mt-4">
-                <button className="w-full flex items-center gap-2 bg-zinc-700 text-white px-3 py-2 rounded-lg hover:bg-zinc-600 transition">
-                  <Settings size={20} />
-                  <span>General</span>
-                </button>
-                <button className="w-full flex items-center gap-2 text-zinc-300 hover:text-white hover:bg-zinc-700 px-3 py-2 rounded-lg transition">
-                  <User2Icon size={20} />
-                  <span>Account</span>
-                </button>
-              </nav>
-            </div>
-
-            {/* Content Area */}
-            <div className="flex-1 dark:bg-zinc-950 bg-[#ffffff] p-6 overflow-y-auto ">
-              <h2 className="text-xl font-semibold dark:text-white text-black mb-4">
-                Settings
-              </h2>
-              <div className=" py-5 flex items-center justify-between border-t-2">
-                <h1 className="text-black dark:text-white">Theme</h1>
-                {/* THEME MENU */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Sun className="h-[1.2rem]  w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 cursor-pointer" />
-                      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 cursor-pointer" />
-                      <span className="sr-only ">Toggle theme</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={() => setTheme("light")}
-                      className={"cursor-pointer"}
-                    >
-                      Light
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setTheme("dark")}
-                      className={"cursor-pointer"}
-                    >
-                      Dark
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setTheme("system")}
-                      className={"cursor-pointer"}
-                    >
-                      System
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          </div>
-        </div>
+       <AppSetting
+        setShowBox={setShowBox}
+       />
       )}
     </>
   );

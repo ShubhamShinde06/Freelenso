@@ -10,141 +10,97 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function AuthPage() {
-  const [userSign, { IsLoading, IsError }] = useUserSignMutation();
   const router = useRouter();
 
- const handleLogin = async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-    const userData = {
-      uid: user.uid,
-      userEmail: user.email,
-      userName: user.displayName,
-      userPhoto: user.photoURL,
-      emailVerified: user.emailVerified,
-    };
+      const userData = {
+        uid: user.uid,
+        userEmail: user.email,
+        userName: user.displayName,
+        userPhoto: user.photoURL,
+        emailVerified: user.emailVerified,
+      };
 
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign`,
-      { userData },
-      { withCredentials: true }
-    );
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign`,
+        { userData },
+        { withCredentials: true }
+      );
 
-    router.push("/auth");
-  } catch (error) {
-    console.error("Login error:", error?.response?.data?.message || error.message);
-  }
-};
-
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(
+        "Login error:",
+        error?.response?.data?.message || error.message
+      );
+    }
+  };
 
   return (
-    <div className=" flex flex-col-reverse lg:flex-row h-screen w-full overflow-hidden">
-      {/* Left Side */}
-      <div className="w-full h-1/2 lg:h-full lg:w-1/2 bg-[#f2f2f2] dark:bg-[#262626] flex flex-col justify-center px-10 lg:px-20 py-10 rounded-t-[50px] lg:rounded-t-[0px] lg:rounded-r-[50px]">
+    <div className="flex flex-col-reverse lg:flex-row h-screen w-full">
+      {/* Left Side - Auth Form */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center px-8 lg:px-20 bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#111] text-white">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          {/* Logo Icon */}
-          <div className="">
-            <svg
-              className="w-6 h-6"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <defs>
-                <linearGradient
-                  id="freelensoGradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop offset="0%" stopColor="#3EC1F3" />
-                  <stop offset="100%" stopColor="#7B3DED" />
-                </linearGradient>
-              </defs>
-              <path
-                fill="url(#freelensoGradient)"
-                fillRule="evenodd"
-                d="M12 8a1 1 0 0 0-1 1v10H9a1 1 0 1 0 0 2h11a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-8Zm4 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
-                clipRule="evenodd"
-              />
-              <path
-                fill="url(#freelensoGradient)"
-                fillRule="evenodd"
-                d="M5 3a2 2 0 0 0-2 2v6h6V9a3 3 0 0 1 3-3h8c.35 0 .687.06 1 .17V5a2 2 0 0 0-2-2H5Zm4 10H3v2a2 2 0 0 0 2 2h4v-4Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-
-          {/* Logo Text/Name */}
-          <div className="relative w-[140px] h-[60px]">
-            <Image
-              src="/logo.png"
-              alt="Logo Text"
-              fill
-              priority
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 140px"
-            />
-          </div>
+        <Link href="/" className="flex items-center gap-2 mb-8">
+          <svg
+            className="w-7 h-7 mt-1"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="url(#grad)"
+          >
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#3EC1F3" />
+                <stop offset="100%" stopColor="#7B3DED" />
+              </linearGradient>
+            </defs>
+            <circle cx="12" cy="12" r="10" />
+          </svg>
+          <span className="text-xl font-bold">DevSyntra</span>
         </Link>
 
-        {/* Heading */}
-        <h1 className="text-4xl font-extrabold text-white mb-4">
-          Get started!
-        </h1>
-        <p className="text-white mb-2">
-          Welcome to Medio. Start for free to create a new 3D project!
+        {/* Headline */}
+        <h1 className="text-4xl font-extrabold mb-3">Welcome To Freelenso👋</h1>
+        <p className="text-gray-300 mb-8">
+          Sign in/up to manage your projects, track clients, and stay on top of
+          deadlines.
         </p>
-        <p className="text-white mb-6">
-          Already have an account?{" "}
-          <span className="text-green-600 font-semibold cursor-pointer hover:underline">
-            Sign In
+
+        {/* Google Auth */}
+        <button
+          onClick={handleLogin}
+          className="flex items-center gap-3 bg-white text-black px-6 py-3 rounded-lg font-medium shadow-lg hover:scale-105 transition"
+        >
+          <FcGoogle size={24} /> Continue with Google
+        </button>
+
+        <p className="mt-6 text-sm text-gray-400">
+          Develop by{" "}
+          <span className="text-[#3EC1F3] font-medium cursor-pointer hover:underline">
+            DevSyntra
           </span>
         </p>
-
-        {/* Social Logins */}
-        <div className="flex flex-col gap-4">
-          <button
-            onClick={handleLogin}
-            className="flex items-center justify-center gap-3 border  py-3 rounded-md bg-[black] "
-          >
-            <FcGoogle size={24} /> Log in with Google
-          </button>
-        </div>
       </div>
 
-      {/* Right Side */}
-      <div className="hidden lg:block w-1/2 relative">
-        {/* Overlay Content (optional) */}
-        <div className="absolute bottom-10 left-10 text-white">
-          <h3 className="text-2xl font-semibold">
-            More Than Just A Creative Platform
+      {/* Right Side - Illustration / Carousel */}
+      <div className="hidden lg:flex w-1/2 relative bg-black">
+        <Image
+          src="/auth_img.avif"
+          alt="Freelance work background"
+          fill
+          className="object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-10">
+          <h3 className="text-2xl font-bold mb-2">
+            Manage Your Freelance Business in One Place
           </h3>
-        </div>
-
-        {/* Carousel Indicators & Language */}
-        <div className="absolute bottom-4 right-6 flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-            <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-          </div>
-          <button className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
-            &larr;
-          </button>
-          <button className="w-8 h-8 rounded-full bg-white text-black font-bold flex items-center justify-center">
-            &rarr;
-          </button>
-          <div className="ml-4 px-3 py-1 bg-white text-sm rounded-full shadow-md flex items-center gap-2">
-            🇪🇸 <span>ES</span>
-          </div>
+          <p className="text-gray-300 max-w-sm">
+            Organize projects, handle client communication, send invoices, and
+            get paid faster — all from one dashboard.
+          </p>
         </div>
       </div>
     </div>

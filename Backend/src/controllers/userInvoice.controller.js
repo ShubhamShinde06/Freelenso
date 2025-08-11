@@ -167,3 +167,32 @@ export const userInvoicePut = async (req, res) => {
     return ErrorHandler(res, "Update failed", error.message, 500);
   }
 };
+
+export const userFullInvoiceByIdToGet = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return ErrorHandler(res, "ID not provided", 400);
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return ErrorHandler(res, "Invalid ID format", 400);
+  }
+
+  try {
+    const invoice = await Invoice.findById({ _id: id }).select("-__v")
+      .populate("user")
+      .populate("client");
+
+    if (!invoice) {
+      return ErrorHandler(res, "invoice not found", 404);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: invoice,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Failed to fetch full invoice", error.message, 500);
+  }
+};

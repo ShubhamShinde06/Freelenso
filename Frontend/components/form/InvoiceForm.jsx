@@ -38,7 +38,7 @@ const InvoiceForm = ({ id, setShowForm }) => {
     tax: "",
     discount: "",
     grandTotal: 0,
-    notes: "",
+    notes: "Thank you for choosing us!",
     status: "",
   });
   const resetForm = () => {
