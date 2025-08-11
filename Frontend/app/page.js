@@ -36,7 +36,7 @@ export default function Home() {
             <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-xl">Freelenso helps freelancers and small teams organize work, communicate with clients, and get paid faster. Simple workflow, beautiful UI and powerful automations.</p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link href="/auth" className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-gradient-to-r from-sky-400 to-violet-600 text-white font-semibold shadow hover:scale-[1.01] transition">Get started — it's free</Link>
+              <Link href="/auth" className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-gradient-to-r from-sky-400 to-violet-600 text-white font-semibold shadow hover:scale-[1.01] transition">Get started — it{"'"}s free</Link>
               <a href="#features" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-200">Learn more</a>
             </div>
 
