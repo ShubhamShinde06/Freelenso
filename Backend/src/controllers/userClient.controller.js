@@ -174,3 +174,24 @@ export const userClients = async (req, res) => {
   }
 };
 
+export const userClientsCount = async (req, res) => {
+  const { userId } = req.params;
+
+  // Validate userId
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid user ID", 400);
+  }
+
+  try {
+   
+    const total = await Client.countDocuments({ user: userId });
+
+    return res.json({
+      success: true,
+      total: total,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Client Count Get Server Down", 500, error.message);
+  }
+};
+

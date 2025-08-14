@@ -57,6 +57,9 @@ const apiMain = apiSlice.injectEndpoints({
     clientsGet: builder.query({
       query: (userId) => `/client/get/${userId}`,
     }),
+    clientsGetCount: builder.query({
+      query: (userId) => `/client/get/count/${userId}`,
+    }),
 
     //Project
     projectCreate: builder.mutation({
@@ -89,6 +92,12 @@ const apiMain = apiSlice.injectEndpoints({
     projectsGet: builder.query({
       query: (clientId) => `/project/get/${clientId}`,
     }),
+    projectsGetCount: builder.query({
+      query: (userId) => `/project/get/count/${userId}`,
+    }),
+    projectGetInfo: builder.query({
+      query: (userId) => `/project/get/main-info/${userId}`,
+    }),
 
 
     //Invoice
@@ -119,6 +128,12 @@ const apiMain = apiSlice.injectEndpoints({
         body: {invoiceData},
       }),
     }),
+    invoiceGetCount: builder.query({
+      query: (userId) => `/invoice/get/count/${userId}`,
+    }),
+    invoiceGetInfo: builder.query({
+      query: (userId) => `/invoice/get/main-info/${userId}`,
+    }),
   
   }),
   
@@ -135,6 +150,7 @@ export const {
   useClientGetSingleQuery,
   useClientPutMutation,
   useClientsGetQuery,
+  useClientsGetCountQuery,
 
   useProjectCreateMutation,
   useProjectGetMutation,
@@ -142,11 +158,15 @@ export const {
   useProjectGetAllQuery,
   useProjectPutMutation,
   useProjectsGetQuery,
+  useProjectsGetCountQuery,
+  useProjectGetInfoQuery,
 
   useInvoiceCreateMutation,
   useInvoiceGetMutation,
   useInvoiceGetSingleQuery,
   useInvoiceGetFullSingleQuery,
-  useInvoicePutMutation
+  useInvoicePutMutation,
+  useInvoiceGetCountQuery,
+  useInvoiceGetInfoQuery
 } = apiMain;
 export default apiMain;

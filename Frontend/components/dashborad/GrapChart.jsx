@@ -16,35 +16,43 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import dayjs from "dayjs";
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+const AppGrapChart = ({ data }) => {
+  // Generate last 6 months dynamically
+  const months = Array.from(
+    { length: 6 },
+    (_, i) =>
+      dayjs()
+        .subtract(5 - i, "month")
+        .format("MMMM") // e.g. "March"
+  );
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: 'var(--chart-1)',
-  },
-  mobile: {
-    label: "Mobile",
-    color: 'var(--chart-2)',
-  },
-};
+  const chartData = months.map((monthName) => {
+    // Filter invoices that belong to this month
+    const total = data
+      ?.filter((inv) => dayjs(inv.createdAt).format("MMMM") === monthName)
+      ?.reduce((sum, inv) => sum + Number(inv.grandTotal || 0), 0);
 
-const AppGrapChart = () => {
+    return {
+      month: monthName,
+      grandTotal: total || 0,
+    };
+  });
+
+  // Chart config for grandTotal
+  const chartConfig = {
+    grandTotal: {
+      label: "Grand Total",
+      color: "var(--chart-1)",
+    },
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Legend</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+        <CardTitle>Revenue Over Time (Last 6 Months)</CardTitle>
+        <CardDescription>Based on invoice creation dates</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -68,21 +76,14 @@ const AppGrapChart = () => {
               content={<ChartTooltipContent indicator="line" />}
             />
             <Area
-              dataKey="mobile"
+              dataKey="grandTotal"
               type="natural"
-              fill={chartConfig.mobile.color}
+              fill={chartConfig.grandTotal.color}
               fillOpacity={0.4}
-              stroke={chartConfig.mobile.color}
+              stroke={chartConfig.grandTotal.color}
               stackId="a"
             />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill={chartConfig.desktop.color}
-              fillOpacity={0.4}
-              stroke={chartConfig.desktop.color}
-              stackId="a"
-            />
+
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
@@ -91,10 +92,10 @@ const AppGrapChart = () => {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Trending up <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              Last 6 months data
             </div>
           </div>
         </div>

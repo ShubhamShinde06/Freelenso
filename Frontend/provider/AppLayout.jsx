@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import AppSideBar from "@/components/AppSideBar";
 import AppHeader from "@/components/AppHeader";
 import { useEffect } from "react";
@@ -11,8 +11,12 @@ import { initSocket } from "@/lib/socket";
 
 export default function AppLayout({ children }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const hiddenPaths = ["/auth", "/"];
-  const hideLayout = hiddenPaths.includes(pathname);
+  const isReadonly = searchParams?.get("view") === "readonly";
+  //const hideLayout = hiddenPaths.includes(pathname);
+  const hideLayout = hiddenPaths.includes(pathname) ||   (isReadonly);
+
   const dispatch = useDispatch();
 
   useEffect(() => {

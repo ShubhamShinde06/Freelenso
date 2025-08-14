@@ -196,3 +196,52 @@ export const userFullInvoiceByIdToGet = async (req, res) => {
     return ErrorHandler(res, "Failed to fetch full invoice", error.message, 500);
   }
 };
+
+export const userInvoiceCount = async (req, res) => {
+  const { userId } = req.params;
+
+  // Validate userId
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid user ID", 400);
+  }
+
+  try {
+
+    const total = await Invoice.countDocuments({ user: userId });
+
+    return res.json({
+      success: true,
+      total: total,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "invoice Count Get Server Down", 500, error.message);
+  }
+};
+
+export const userInvoiceMainInfo = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid user ID", 400);
+  }
+
+  try {
+    // Fetch invoices with selected fields
+    const invoices = await Invoice.find({ user: userId })
+      .select("INV status grandTotal createdAt");
+
+    if (invoices.length === 0) {
+      return res.json({
+        success: false,
+        message: "No invoices found!",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: invoices,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "Invoice fetch failed", 500, error.message);
+  }
+};

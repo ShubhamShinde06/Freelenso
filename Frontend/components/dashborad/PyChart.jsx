@@ -18,51 +18,51 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-    { browser: "chrome", visitors: 275, fill: "#4285F4" },
-    { browser: "safari", visitors: 200, fill: "#FF9500" },
-    { browser: "firefox", visitors: 287, fill: "#FF7139" },
-    { browser: "edge", visitors: 173, fill: "#0078D7" },
-    { browser: "other", visitors: 190, fill: "#6C757D" },
+const AppPyChart = ({ data }) => {
+  // Prepare project status data
+  const projectStatusData = [
+    {
+      name: "Pending",
+      value: data?.filter((p) => p.projectStatus === "Pending").length,
+      fill: "#4285F4",
+    },
+    {
+      name: "In Progress",
+      value: data?.filter((p) => p.projectStatus === "In Progress").length,
+      fill: "#FF9500",
+    },
+    {
+      name: "Completed",
+      value: data?.filter((p) => p.projectStatus === "Completed").length,
+      fill: "#FF7139",
+    },
+    {
+      name: "Cancelled",
+      value: data?.filter((p) => p.projectStatus === "Cancelled").length,
+      fill: "#0078D7",
+    },
   ];
 
+  console.log(data)
+
+  // Calculate total
+  const totalProjects = React.useMemo(() => {
+    return projectStatusData.reduce((acc, curr) => acc + curr.value, 0);
+  }, [projectStatusData]);
+
+  // Chart config (for your ChartContainer component)
   const chartConfig = {
-    visitors: {
-      label: "Visitors",
-    },
-    chrome: {
-      label: "Chrome",
-      color: "#4285F4",
-    },
-    safari: {
-      label: "Safari",
-      color: "#FF9500",
-    },
-    firefox: {
-      label: "Firefox",
-      color: "#FF7139",
-    },
-    edge: {
-      label: "Edge",
-      color: "#0078D7",
-    },
-    other: {
-      label: "Other",
-      color: "#6C757D",
-    },
+    Pending: { color: "#4285F4" },
+    "In Progress": { color: "#FF9500" },
+    Completed: { color: "#FF7139" },
+    Cancelled: { color: "#0078D7" },
   };
-
-const AppPyChart = () => {
-
-    const totalVisitors = React.useMemo(() => {
-        return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-      }, []);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Project Status Overview</CardTitle>
+        <CardDescription>Based on all projects</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -75,9 +75,9 @@ const AppPyChart = () => {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={projectStatusData}
+              dataKey="value"
+              nameKey="name"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -96,14 +96,14 @@ const AppPyChart = () => {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalProjects}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Projects
                         </tspan>
                       </text>
                     );
@@ -117,14 +117,14 @@ const AppPyChart = () => {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing all project statuses
         </div>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export default AppPyChart
+export default AppPyChart;

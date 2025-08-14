@@ -175,3 +175,52 @@ export const userAllProjects = async (req, res) => {
     return ErrorHandler(res, "Get projects failed", error.message, 500);
   }
 };
+
+export const userProjectCount = async (req, res) => {
+  const { userId } = req.params;
+
+  // Validate userId
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid user ID", 400);
+  }
+
+  try {
+
+    const total = await Project.countDocuments({ user: userId });
+
+    return res.json({
+      success: true,
+      total: total,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "project Count Get Server Down", 500, error.message);
+  }
+};
+
+export const userProjectMainInfo = async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return ErrorHandler(res, "Invalid user ID", 400);
+  }
+
+  try {
+    // Fetch invoices with selected fields
+    const projects = await Project.find({ user: userId })
+      .select("projectName projectStatus budget");
+
+    if (projects.length === 0) {
+      return res.json({
+        success: false,
+        message: "No projects found!",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    return ErrorHandler(res, "projects fetch failed", 500, error.message);
+  }
+};

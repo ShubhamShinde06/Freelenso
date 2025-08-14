@@ -25,12 +25,12 @@ export default function AuthPage() {
         emailVerified: user.emailVerified,
       };
 
-      await axios.post(
+    await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign`,
         { userData },
         { withCredentials: true }
       );
-
+     
       router.push("/dashboard");
     } catch (error) {
       console.error(
@@ -41,9 +41,9 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex flex-col-reverse lg:flex-row h-screen w-full">
+    <div className="flex flex-col-reverse lg:flex-row h-screen w-full bg-white">
       {/* Left Side - Auth Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center px-8 lg:px-20 bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#111] text-white">
+      <div className="w-full py-5 rounded-tr-3xl rounded-tl-3xl lg:w-1/2 lg:py-0 lg:rounded-tr-none lg:rounded-tl-none flex flex-col justify-center items-center px-8 lg:px-20 bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#111] text-white">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mb-8">
           <svg
@@ -63,7 +63,7 @@ export default function AuthPage() {
         </Link>
 
         {/* Headline */}
-        <h1 className="text-4xl font-extrabold mb-3">Welcome To Freelenso👋</h1>
+        <h1 className="lg:text-4xl text-2xl font-extrabold mb-3">Welcome To Freelenso👋</h1>
         <p className="text-gray-300 mb-8">
           Sign in/up to manage your projects, track clients, and stay on top of
           deadlines.
@@ -86,14 +86,14 @@ export default function AuthPage() {
       </div>
 
       {/* Right Side - Illustration / Carousel */}
-      <div className="hidden lg:flex w-1/2 relative bg-black">
+      <div className="flex lg:w-1/2 w-full h-full relative bg-white">
         <Image
           src="/auth_img.avif"
           alt="Freelance work background"
           fill
           className="object-cover opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-10">
+        <div className="absolute hidden inset-0 bg-gradient-to-t from-black/70 to-transparent lg:flex flex-col justify-end p-10">
           <h3 className="text-2xl font-bold mb-2">
             Manage Your Freelance Business in One Place
           </h3>
