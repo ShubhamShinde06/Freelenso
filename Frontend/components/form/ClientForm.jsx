@@ -221,6 +221,7 @@ const ClientForm = ({ setShowForm, id }) => {
             value={form.firstName}
             placeholder="First Name"
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -243,6 +244,7 @@ const ClientForm = ({ setShowForm, id }) => {
             value={form.email}
             placeholder="Email"
             onChange={handleChange}
+            required
           />
         </div>
 

@@ -32,8 +32,8 @@ export default function InvoicePrintSendPage() {
     date: formatDate(singleData?.data.createdAt),
     dueDate: formatDate(singleData?.data.dueDate),
     billedTo: {
-      name: "Studio Shodwe",
-      address: "123 Anywhere St., Any City",
+      name: singleData?.data.user?.userName || "",
+      address: singleData?.data.user?.userAddress || "",
       email: singleData?.data.user?.userEmail || "",
     },
     from: {
@@ -42,6 +42,7 @@ export default function InvoicePrintSendPage() {
       }`,
       address: singleData?.data.client?.address || "",
       email: singleData?.data.client?.email || "",
+      mobileNo: singleData?.data.client?.mobileNo || "",
     },
     items: Array.isArray(singleData?.data.items)
       ? singleData.data.items.map((item) => {
@@ -72,24 +73,47 @@ export default function InvoicePrintSendPage() {
     note: singleData?.data.notes || "Thank you for choosing us!",
   };
 
+
+  // Utility: Generate Readonly Invoice Link
+  const getReadonlyInvoiceUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("view", "readonly");
+    return url.toString();
+  };
+
+  // Share via WhatsApp
   const handleWhatsAppShare = () => {
-    const phoneNumber = "9892436240";
-    const message = `Check out this invoice: ${window.location.href}?view=readonly`;
+    const phoneNumber = invoice?.from?.mobileNo; // Better to store phone for WhatsApp
+    if (!phoneNumber) {
+      alert("No phone number available for WhatsApp sharing.");
+      return;
+    }
+
+    const message = `📄 Invoice Available\nCheck it out here: ${getReadonlyInvoiceUrl()}`;
 
     window.open(
-      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/+91${phoneNumber}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   };
 
+  // Share via Gmail
   const handleGmailShare = () => {
     const recipient = invoice?.from?.email;
+    if (!recipient) {
+      alert("No email address available for Gmail sharing.");
+      return;
+    }
+
     const subject = "Invoice Details";
-    const body = `Hi,\n\nPlease check the invoice here: ${window.location.href}?view=readonly`;
+    const body = `Hello,\n\nPlease check the invoice using the link below:\n${getReadonlyInvoiceUrl()}\n\nBest regards,\n${
+      invoice?.from?.name || "Your Company"
+    }`;
+
     window.open(
-      `https://mail.google.com/mail/?view=cm&fs=1&to=${recipient}&su=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`,
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+        recipient
+      )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "_blank"
     );
   };
@@ -102,17 +126,19 @@ export default function InvoicePrintSendPage() {
           isReadOnlyView ? " justify-between" : " justify-center"
         }`}
       >
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
-            F
-          </div>
-          <div className="hidden sm:block">
-            <div className="text-lg font-semibold">Freelenso</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              Develop By DevSyntra
+        {isReadOnlyView && (
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
+              F
             </div>
-          </div>
-        </Link>
+            <div className=" sm:block">
+              <div className="text-lg font-semibold">Freelenso</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                Develop By DevSyntra
+              </div>
+            </div>
+          </Link>
+        )}
 
         {/* Always show Print */}
         <button
