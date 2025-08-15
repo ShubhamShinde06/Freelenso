@@ -12,8 +12,8 @@ const generateTokenAndSetCookie = (res, payload) => {
 
   res.cookie("side_to_side", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // true in production
-    sameSite: "lax",
+    secure: true, // true in production
+    sameSite: "none",
     path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     overwrite: true,
