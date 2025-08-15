@@ -53,7 +53,7 @@ export default function Home() {
           </div>
 
           <div className="relative w-full h-80 sm:h-96 lg:h-[420px] rounded-xl overflow-hidden shadow-lg bg-white/60 dark:bg-gradient-to-br dark:from-[#071421] dark:via-[#081621]">
-            <Image src="/freelenso.png" 
+            <Image src="./freelenso.png" 
               alt="dashboard mockup" 
               fill 
               className="object-fill" 
