@@ -12,10 +12,10 @@ const generateTokenAndSetCookie = (res, payload) => {
 
   res.cookie("side_to_side", token, {
     httpOnly: true,
-    secure: true, // true in production
+    secure: true, 
     sameSite: "none",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
     overwrite: true,
   });
 

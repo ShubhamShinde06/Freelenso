@@ -2,9 +2,10 @@
 
 'use client';
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import ClientForm from '@/components/form/ClientForm';
 import { useParams } from 'next/navigation';
+import withSuspense from '@/components/withSuspense';
 
 function EditClientPageContent() {
   const { id } = useParams();
@@ -15,10 +16,4 @@ function EditClientPageContent() {
   );
 }
 
-export default function EditClientPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <EditClientPageContent />
-    </Suspense>
-  );
-}
+export default withSuspense(EditClientPageContent);

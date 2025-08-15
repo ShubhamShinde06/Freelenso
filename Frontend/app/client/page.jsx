@@ -4,11 +4,9 @@ import ClientContent from "@/components/ClientContent";
 import withSuspense from "@/components/withSuspense";
 
 function ClientPage() {
-
-
   return (
     <div>
-      <ClientContent/>
+      <ClientContent />
     </div>
   );
 }
