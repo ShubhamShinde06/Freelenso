@@ -1,12 +1,14 @@
 "use client";
 
-import { Suspense } from "react";
-import NotFoundContent from "./NotFoundContent";
+import { useSearchParams } from "next/navigation";
 
-export default function NotFoundPage() {
+export default function NotFoundContent() {
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <NotFoundContent />
-    </Suspense>
+    <div>
+      404 Not Found {reason && `: ${reason}`}
+    </div>
   );
 }

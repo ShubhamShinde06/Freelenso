@@ -35,10 +35,11 @@ import { NextResponse } from "next/server";
 export function middleware(request) {
   const pathname = request.nextUrl.pathname;
   const searchParams = request.nextUrl.searchParams;
-  const token = request.cookies.get(process.env.NEXT_PUBLIC_TOKEN)?.value;
+
+  const tokenName = process.env.NEXT_PUBLIC_TOKEN || "side_to_side"; // fallback cookie name
+  const token = request.cookies.get(tokenName)?.value;
 
   const publicPaths = ["/auth", "/"];
-
   const isReadonlyInvoice =
     pathname.startsWith("/invoice/") &&
     searchParams.get("view") === "readonly";
@@ -49,7 +50,11 @@ export function middleware(request) {
   }
 
   // Redirect guests away from private pages (unless readonly invoice)
-  if (!publicPaths.some(path => pathname.startsWith(path)) && !token && !isReadonlyInvoice) {
+  if (
+    !publicPaths.some(path => pathname.startsWith(path)) &&
+    !token &&
+    !isReadonlyInvoice
+  ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -59,4 +64,5 @@ export function middleware(request) {
 export const config = {
   matcher: ["/((?!_next|api|main_logo.png).*)"],
 };
+
 

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function AuthContent() {
+
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -24,12 +25,12 @@ export default function AuthContent() {
         emailVerified: user.emailVerified,
       };
 
-    await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign`,
         { userData },
         { withCredentials: true }
       );
-     
+
       router.push("/dashboard");
     } catch (error) {
       console.error(
@@ -41,15 +42,10 @@ export default function AuthContent() {
 
   return (
     <div className="flex flex-col-reverse lg:flex-row h-screen w-full bg-white">
-      {/* Left Side - Auth Form */}
-      <div className="w-full py-5 rounded-tr-3xl rounded-tl-3xl lg:w-1/2 lg:py-0 lg:rounded-tr-none lg:rounded-tl-none flex flex-col justify-center items-center px-8 lg:px-20 bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#111] text-white">
-        {/* Logo */}
+      {/* Left */}
+      <div className="w-full py-5 lg:w-1/2 flex flex-col justify-center items-center px-8 lg:px-20 bg-gradient-to-br from-[#1a1a1a] via-[#222] to-[#111] text-white">
         <Link href="/" className="flex items-center gap-2 mb-8">
-          <svg
-            className="w-7 h-7 mt-1"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="url(#grad)"
-          >
+          <svg className="w-7 h-7 mt-1" xmlns="http://www.w3.org/2000/svg" fill="url(#grad)">
             <defs>
               <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#3EC1F3" />
@@ -61,14 +57,13 @@ export default function AuthContent() {
           <span className="text-xl font-bold">DevSyntra</span>
         </Link>
 
-        {/* Headline */}
-        <h1 className="lg:text-4xl text-2xl font-extrabold mb-3">Welcome To Freelenso</h1>
+        <h1 className="lg:text-4xl text-2xl font-extrabold mb-3">
+          Welcome To Freelenso👋
+        </h1>
         <p className="text-gray-300 mb-8">
-          Sign in/up to manage your projects, track clients, and stay on top of
-          deadlines.
+          Sign in/up to manage your projects, track clients, and stay on top of deadlines.
         </p>
 
-        {/* Google Auth */}
         <button
           onClick={handleLogin}
           className="flex items-center gap-3 bg-white text-black px-6 py-3 rounded-lg font-medium shadow-lg hover:scale-105 transition"
@@ -77,14 +72,14 @@ export default function AuthContent() {
         </button>
 
         <p className="mt-6 text-sm text-gray-400">
-          Develop by{" "}
+          Developed by{" "}
           <span className="text-[#3EC1F3] font-medium cursor-pointer hover:underline">
             DevSyntra
           </span>
         </p>
       </div>
 
-      {/* Right Side - Illustration / Carousel */}
+      {/* Right */}
       <div className="flex lg:w-1/2 w-full h-full relative bg-white">
         <Image
           src="/auth_img.avif"
@@ -97,8 +92,7 @@ export default function AuthContent() {
             Manage Your Freelance Business in One Place
           </h3>
           <p className="text-gray-300 max-w-sm">
-            Organize projects, handle client communication, send invoices, and
-            get paid faster — all from one dashboard.
+            Organize projects, handle client communication, send invoices, and get paid faster — all from one dashboard.
           </p>
         </div>
       </div>

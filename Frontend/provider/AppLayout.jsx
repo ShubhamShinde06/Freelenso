@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import AppSideBar from "@/components/AppSideBar";
 import AppHeader from "@/components/AppHeader";
@@ -9,13 +10,13 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/store/global/globalState";
 import { initSocket } from "@/lib/socket";
 
-export default function AppLayout({ children }) {
+function AppLayoutContent({ children }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const hiddenPaths = ["/auth", "/"];
   const isReadonly = searchParams?.get("view") === "readonly";
-  //const hideLayout = hiddenPaths.includes(pathname);
-  const hideLayout = hiddenPaths.includes(pathname) ||   (isReadonly);
+  const hideLayout = hiddenPaths.includes(pathname) || isReadonly;
 
   const dispatch = useDispatch();
 
@@ -44,13 +45,12 @@ export default function AppLayout({ children }) {
     const socket = initSocket();
 
     socket.on("user:sign", () => {
-      fetchCompanyInfo(); 
+      fetchCompanyInfo();
     });
 
     return () => {
       socket.off("user:sign");
     };
-
   }, [dispatch]);
 
   return (
@@ -71,12 +71,20 @@ export default function AppLayout({ children }) {
           <div
             className={`flex-1 overflow-auto custom-scroll ${
               !hideLayout && "px-1 py-4 print:p-0"
-            }   `}
+            }`}
           >
             {children}
           </div>
         </div>
       </main>
     </>
+  );
+}
+
+export default function AppLayout(props) {
+  return (
+    <Suspense fallback={<div>Loading layout…</div>}>
+      <AppLayoutContent {...props} />
+    </Suspense>
   );
 }

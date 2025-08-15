@@ -1,12 +1,11 @@
 "use client";
-
 import { Suspense } from "react";
-import AuthContent from "@/components/AuthContent";
+import NotFoundContent from "./NotFoundContent";
 
-export default function Page() {
+export default function NotFound() {
   return (
     <Suspense fallback={<div style={{ padding: 24 }}>Loading…</div>}>
-      <AuthContent />
+      <NotFoundContent />
     </Suspense>
   );
 }
