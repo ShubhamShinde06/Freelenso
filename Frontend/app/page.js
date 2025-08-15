@@ -53,7 +53,7 @@ export default function Home() {
           </div>
 
           <div className="relative w-full h-80 sm:h-96 lg:h-[420px] rounded-xl overflow-hidden shadow-lg bg-white/60 dark:bg-gradient-to-br dark:from-[#071421] dark:via-[#081621]">
-            <Image src="./freelenso.png" 
+            <Image src="/freelenso.png" 
               alt="dashboard mockup" 
               fill 
               className="object-fill" 
@@ -86,58 +86,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Projects / Clients quick list */}
-        {/* <section id="quick" className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="col-span-2 p-6 bg-white dark:bg-[#071427] rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">My Projects</h3>
-              <div className="flex items-center gap-3">
-                <input placeholder="Search projects..." className="px-3 py-2 rounded-md bg-gray-50 dark:bg-[#06101a] border border-gray-100 dark:border-gray-800" />
-                <Link href="/projects/new" className="px-3 py-2 bg-sky-500 text-white rounded-md">+ New Project</Link>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              <div className="p-3 rounded-md bg-gray-50 dark:bg-[#06111a] border border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Website Redesign</div>
-                  <div className="text-xs text-gray-500">Due Aug 31 • Client: Axis</div>
-                </div>
-                <div className="text-sm text-gray-600">In Progress</div>
-              </div>
-
-              <div className="p-3 rounded-md bg-gray-50 dark:bg-[#06111a] border border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Landing Page</div>
-                  <div className="text-xs text-gray-500">Due Aug 12 • Client: Nexo</div>
-                </div>
-                <div className="text-sm text-gray-600">Pending</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 bg-white dark:bg-[#071427] rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
-            <h3 className="text-lg font-semibold mb-2">Clients</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Bill Buchar</div>
-                  <div className="text-xs text-gray-500">axis • bill@gmail.com</div>
-                </div>
-                <div className="text-sm text-gray-600">Active</div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Nexo</div>
-                  <div className="text-xs text-gray-500">nexo1 • info@nexo.com</div>
-                </div>
-                <div className="text-sm text-gray-600">Inactive</div>
-              </div>
-            </div>
-          </div>
-        </section> */}
 
         {/* Pricing */}
         <section id="pricing" className="mt-12">
