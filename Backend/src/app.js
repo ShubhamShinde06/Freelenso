@@ -17,7 +17,7 @@ app.use(
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://freelenso.vercel.app"],
+    origin: [process.env.FRONTEND_URL, process.env.FRONTEND_ADMIN_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
