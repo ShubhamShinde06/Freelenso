@@ -6,7 +6,7 @@ let socket;
 
 export const initSocket = () => {
   if (!socket) {
-    socket = io("http://localhost:8000", {
+    socket = io("https://freelenso-backend.onrender.com", {
       withCredentials: true,
     });
   }
