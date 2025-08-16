@@ -16,9 +16,20 @@ export const userClientPost = async (req, res) => {
     pincode,
   } = clientData;
 
+
+
   if (!user || !firstName || !lastName || !email || !mobileNo) {
-    return ErrorHandler(res, "Missing client info", 400);
-  }
+  const missingFields = [];
+
+  if (!user) missingFields.push("user");
+  if (!firstName) missingFields.push("firstName");
+  if (!lastName) missingFields.push("lastName");
+  if (!email) missingFields.push("email");
+  if (!mobileNo) missingFields.push("mobileNo");
+
+  return ErrorHandler(res, `Missing fields: ${missingFields.join(", ")}`, 400);
+}
+
 
   try {
     const client = new Client({
