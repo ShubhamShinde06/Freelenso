@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import ClientContent from "@/components/ClientContent";
-import withSuspense from "@/components/withSuspense";
+
 
 function ClientPage() {
   return (
@@ -11,4 +11,4 @@ function ClientPage() {
   );
 }
 
-export default withSuspense(ClientPage);
+export default ClientPage;

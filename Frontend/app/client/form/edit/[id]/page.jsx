@@ -1,10 +1,8 @@
-// app/client/form/edit/[id]/page.jsx
 'use client';
 
 import React from 'react';
 import ClientForm from '@/components/form/ClientForm';
 import { useParams } from 'next/navigation';
-import withSuspense from '@/components/withSuspense';
 
 function EditClientPageContent() {
   const { id } = useParams();
@@ -15,4 +13,4 @@ function EditClientPageContent() {
   );
 }
 
-export default withSuspense(EditClientPageContent);
+export default EditClientPageContent
