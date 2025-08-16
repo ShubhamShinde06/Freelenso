@@ -37,7 +37,7 @@ const AppBarChart = ({ data }) => {
   });
 
   // Step 3: Fill the months data
-  data.forEach((invoice) => {
+  data?.forEach((invoice) => {
     const invoiceDate = new Date(invoice.createdAt);
 
     // Only count if in last 6 months
