@@ -165,11 +165,13 @@ const ClientForm = ({ setShowForm, id }) => {
     try {
       if (id) {
         const res = await clientPut({ clientData, id });
+         console.log(res)
         showSuccessToast({
           heading: "Client Update" || res.data.message,
         });
       } else {
         const res = await clientPost({ clientData });
+        console.log(res)
         showSuccessToast({
           heading: "New Client Created" || res.data.message,
         });
