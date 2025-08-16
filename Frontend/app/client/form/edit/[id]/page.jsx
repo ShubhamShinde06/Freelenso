@@ -1,5 +1,3 @@
-// app/client/form/edit/[id]/page.jsx
-
 'use client';
 
 import React from 'react';
