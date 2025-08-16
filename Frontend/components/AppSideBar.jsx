@@ -49,7 +49,7 @@ export default function AppSidebar(props) {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/logout",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -105,7 +105,7 @@ export default function AppSidebar(props) {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
                     F
                   </div>
-                  <div className="hidden sm:block">
+                  <div className=" sm:block">
                     <div className="text-lg font-semibold">Freelenso</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">
                       Develop By DevSyntra
