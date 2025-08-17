@@ -231,7 +231,7 @@ export default function InvoicePrintSendPageContent() {
               </thead>
               <tbody>
                 {invoice.items.map((item, idx) => (
-                  <tr key={idx} className="border-b last:border-b-0">
+                  <tr key={idx} className="">
                     <td className="px-2 py-1">{item.project}</td>
                     <td className="px-2 py-1 text-right">{item.hours}</td>
                     <td className="px-2 py-1 text-right">{item.rate}.00</td>

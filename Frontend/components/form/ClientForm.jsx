@@ -263,14 +263,11 @@ const ClientForm = ({ setShowForm, id }) => {
           <Button
             variant="outlined"
             sx={{
-              borderColor: "#444",
+              borderColor: "#888",
+              backgroundColor: "#2a2a2a",
               color: "white",
               textTransform: "none",
               borderRadius: "8px",
-              "&:hover": {
-                borderColor: "#888",
-                backgroundColor: "#2a2a2a",
-              },
               width: "30%",
             }}
             onClick={handleClose}

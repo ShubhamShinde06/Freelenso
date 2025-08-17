@@ -96,11 +96,11 @@ const AppSetting = ({ setShowBox }) => {
         {tabs == "General" && (
           <>
             <div className="flex-1  p-6 overflow-y-auto ">
-              <h2 className="text-xl font-semibold dark:text-white text-black mb-4">
+              <h2 className="text-xl font-semibold  text-white mb-4">
                 Settings
               </h2>
               <div className=" py-5 flex items-center justify-between border-t-2">
-                <h1 className="text-black dark:text-white">Theme</h1>
+                <h1 className="text-white">Theme</h1>
                 {/* THEME MENU */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
