@@ -58,7 +58,7 @@ export default function AppSidebar(props) {
         }
       );
 
-      console.log("Logout response:", response.data);
+     // console.log("Logout response:", response.data);
 
       // Optional: check if success is true
       if (response.data.success) {

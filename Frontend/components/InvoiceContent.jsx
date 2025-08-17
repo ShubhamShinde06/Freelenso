@@ -81,7 +81,7 @@ export default function InvoiceContent() {
     setPage(nextPage);
     fetchInvoice(nextPage);
   };
-  console.log(allData);
+//  console.log(allData);
   const data = allData.map((invoice, index) => ({
     id: index + 1,
     _id: invoice._id,

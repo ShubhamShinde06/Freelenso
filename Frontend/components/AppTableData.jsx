@@ -89,7 +89,7 @@ const AppTableData = ({
 
   const handleEdit = (row) => {
     handleMenuClose();
-    console.log(row)
+   // console.log(row)
     router.push(`${page}/form/edit/${row._id}`)
   };
 

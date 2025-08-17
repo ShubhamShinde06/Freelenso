@@ -79,8 +79,8 @@ const ClientForm = ({ setShowForm, id }) => {
       pincode: data.pincode ?? "",
     });
   }, [id, singleClient]);
-  console.log(singleClient?.data, "singleClient")
-  console.log(form)
+//  console.log(singleClient?.data, "singleClient")
+  //console.log(form)
 
   // Live update on socket events
   useEffect(() => {

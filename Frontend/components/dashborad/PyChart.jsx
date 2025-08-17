@@ -43,7 +43,7 @@ const AppPyChart = ({ data }) => {
     },
   ];
 
-  console.log(data)
+ // console.log(data)
 
   // Calculate total
   const totalProjects = React.useMemo(() => {

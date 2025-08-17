@@ -178,7 +178,7 @@ const InvoiceForm = ({ id, setShowForm }) => {
         showSuccessToast({
           heading: "Invoice Updated" || res.data.message,
         });
-        console.log(invoiceData);
+      //  console.log(invoiceData);
       } else {
         const res = await invoicePost({ invoiceData });
         showSuccessToast({

@@ -45,7 +45,7 @@ const AppSetting = ({ setShowBox }) => {
 
     try {
       const res = userUpdate({ data, id: User?._id });
-      console.log(res?.data);
+      //console.log(res?.data);
     } catch (error) {
       console.log(error);
       showErrorToast({
