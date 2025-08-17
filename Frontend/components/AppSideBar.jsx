@@ -95,118 +95,125 @@ export default function AppSidebar(props) {
 
   return (
     <>
-      <Sidebar collapsible="icon" {...props} className={"print:hidden"}>
-        <SidebarHeader className={" h-20"}>
+     <Sidebar collapsible="icon" {...props} className="print:hidden">
+  {/* Header */}
+  <SidebarHeader className="h-20">
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild className="mt-1 h-18 text-2xl">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
+              F
+            </div>
+            {/* This will auto-hide in icon mode */}
+            <div className="hidden lg:block">
+              <div className="text-lg font-semibold">Freelenso</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                Develop By DevSyntra
+              </div>
+            </div>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarHeader>
+
+  {/* Menu */}
+  <SidebarContent className="mt-2">
+    <SidebarGroup>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className={`py-4 ${
+                pathname === "/dashboard"
+                  ? "dark:bg-[#262626] text-white border-2 bg-white"
+                  : ""
+              }`}
+            >
+              <Link href="/dashboard" className="flex gap-3 items-center">
+                <LayoutDashboard className="w-5 h-5" />
+                <span className="hidden lg:inline">Dashboard</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+
+    {/* Dynamic Items */}
+    {data.map((item, index) => (
+      <SidebarGroup key={index}>
+        <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className=" mt-1  h-18 text-2xl">
-                <Link href="/dashboard" className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
-                    F
-                  </div>
-                  <div className=" sm:block">
-                    <div className="text-lg font-semibold">Freelenso</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Develop By DevSyntra
-                    </div>
-                  </div>
+              <SidebarMenuButton
+                asChild
+                className={`py-4 ${
+                  pathname === item.linkOne
+                    ? "dark:bg-[#262626] text-white border-2 bg-white"
+                    : ""
+                }`}
+              >
+                <Link
+                  href={item.linkOne}
+                  onClick={() =>
+                    window.innerWidth < 1024 && toggleSidebar()
+                  }
+                  className="flex gap-3 items-center"
+                >
+                  <span className="w-5 h-5">{item.iconOne}</span>
+                  <span className="hidden lg:inline">{item.headOne}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarHeader>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    ))}
+  </SidebarContent>
 
-        <SidebarContent className={" mt-2"}>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    className={`py-5 ${
-                      pathname === "/dashboard" &&
-                      "dark:bg-[#262626] dark:text-white border-2 bg-[#FFFFFF] text-black"
-                    }`}
-                  >
-                    <Link href={"/dashboard"} className="flex gap-3 ">
-                      <span className="  text-base rounded">
-                        <LayoutDashboard />
-                      </span>
-                      <span className="">Dashboard</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+  {/* Footer */}
+  <SidebarFooter>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="cursor-pointer">
+            <SidebarMenuButton>
+              <div className="w-8 h-8 border rounded-full relative overflow-hidden">
+                {User?.userPhoto ? (
+                  <Image
+                    src={User.userPhoto}
+                    fill
+                    alt="user-photo"
+                    sizes="32px"
+                    className="object-cover rounded-full"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center text-xs">
+                    {User?.userName?.charAt(0)?.toUpperCase() || "U"}
+                  </div>
+                )}
+              </div>
+              <span className="hidden lg:inline">{User?.userName}</span>
+              <ChevronUp className="ml-auto hidden lg:inline" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setShowBox(true)}>
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarFooter>
+</Sidebar>
 
-          {data.map((item, index) => (
-            <SidebarGroup key={index + 1}>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={`py-4 ${
-                        pathname === item.linkOne &&
-                        "dark:bg-[#262626] dark:text-white border-2 bg-[#FFFFFF] text-black"
-                      }`}
-                    >
-                      <Link 
-                        href={item.linkOne} onClick={() => window.innerWidth < 1024 && toggleSidebar()} 
-                        className="flex gap-3 "
-                      >
-                        <span className=" text-base rounded">
-                          {item.iconOne}
-                        </span>
-                        <span className="">{item.headOne}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ))}
-        </SidebarContent>
-
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild className=" cursor-pointer">
-                  <SidebarMenuButton>
-                    <div className="w-8 h-8 border rounded-full relative overflow-hidden">
-                      {User?.userPhoto ? (
-                        <Image
-                          src={User.userPhoto}
-                          fill
-                          alt="user-photo"
-                          sizes="(max-width: 768px) 40px, (max-width: 1200px) 60px, 80px"
-                          className="object-cover rounded-full"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center text-xs">
-                          {User?.userName?.charAt(0)?.toUpperCase() || "U"}
-                        </div>
-                      )}
-                    </div>
-                    {User?.userName}
-                    <ChevronUp className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align={"end"}>
-                  <DropdownMenuItem onClick={() => setShowBox(true)}>
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </Sidebar>
 
       {/* Modal Overlay */}
       {ShowBox && <AppSetting setShowBox={setShowBox} />}
