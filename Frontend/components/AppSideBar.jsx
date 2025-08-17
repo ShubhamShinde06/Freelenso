@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -41,6 +42,7 @@ import AppSetting from "./AppSetting";
 
 export default function AppSidebar(props) {
   const pathname = usePathname();
+  const { toggleSidebar } = useSidebar();
   const User = useSelector((state) => state?.globalState?.User);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -150,7 +152,10 @@ export default function AppSidebar(props) {
                         "dark:bg-[#262626] dark:text-white border-2 bg-[#FFFFFF] text-black"
                       }`}
                     >
-                      <Link href={item.linkOne} className="flex gap-3 ">
+                      <Link 
+                        href={item.linkOne} onClick={() => window.innerWidth < 1024 && toggleSidebar()} 
+                        className="flex gap-3 "
+                      >
                         <span className=" text-base rounded">
                           {item.iconOne}
                         </span>

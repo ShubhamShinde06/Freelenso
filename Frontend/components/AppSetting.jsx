@@ -10,8 +10,10 @@ import { Button } from "./ui/button";
 import { useUserGetQuery, useUserPutMutation } from "@/store/api/apiSlice";
 import { showErrorToast } from "./AppToast";
 import { useSelector } from "react-redux";
+import { useTheme } from "next-themes";
 
 const AppSetting = ({ setShowBox }) => {
+  const { setTheme } = useTheme();
   const [userUpdate, { isLoading }] = useUserPutMutation();
   const User = useSelector((state) => state?.globalState?.User);
   const id = User?._id;
