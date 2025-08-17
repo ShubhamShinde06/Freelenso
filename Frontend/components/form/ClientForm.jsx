@@ -239,7 +239,7 @@ const ClientForm = ({ setShowForm, id }) => {
           name="country"
           value={form.country}
           onChange={handleChange}
-          className="py-2 px-2 border rounded-md w-full"
+          className="py-2 px-2 border rounded-md w-full dark:bg-[#343535] dark:text-white"
         >
           <option value="">Select Country</option>
           {countryList.map((country, index) => (
