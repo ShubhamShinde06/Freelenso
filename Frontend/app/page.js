@@ -92,7 +92,7 @@ export default function Home() {
           <h2 className="text-2xl font-semibold">Pricing</h2>
           <p className="text-gray-600 dark:text-gray-400 mt-2 max-w-2xl">Simple plans that scale with your freelance business.</p>
 
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="p-6 rounded-lg bg-white dark:bg-[#071427] border border-gray-100 dark:border-gray-800 text-center">
               <div className="text-sm font-semibold">Free</div>
               <div className="text-2xl font-bold mt-2">₹0</div>
