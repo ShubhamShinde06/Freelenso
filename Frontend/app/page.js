@@ -100,12 +100,12 @@ export default function Home() {
               <Link href={'/auth'}><button className="mt-4 px-4 py-2 bg-sky-500 text-white rounded">Start Free</button></Link> 
             </div>
 
-            <div className="p-6 rounded-lg bg-white dark:bg-[#071427] border border-gray-100 dark:border-gray-800 text-center">
+            {/* <div className="p-6 rounded-lg bg-white dark:bg-[#071427] border border-gray-100 dark:border-gray-800 text-center">
               <div className="text-sm font-semibold">Pro</div>
               <div className="text-2xl font-bold mt-2">₹69 / mo</div>
               <div className="text-xs text-gray-500 mt-2">Everything freelancers need With AI</div>
               <button className="mt-4 px-4 py-2 bg-violet-600 text-white rounded">coming soon...</button>
-            </div>
+            </div> */}
 
             <div className="p-6 rounded-lg bg-white dark:bg-[#071427] border border-gray-100 dark:border-gray-800 text-center">
               <div className="text-sm font-semibold">Agency</div>

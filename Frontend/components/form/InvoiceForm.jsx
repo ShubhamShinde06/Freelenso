@@ -144,6 +144,7 @@ const InvoiceForm = ({ id, setShowForm }) => {
         heading: "Missing Field",
         message: `Client must be provided before saving.`,
       });
+      return
     }
 
     if (form.items.some((item) => !item.project)) {
@@ -151,6 +152,7 @@ const InvoiceForm = ({ id, setShowForm }) => {
         heading: "Missing Field",
         message: `Each project item must have a project selected.`,
       });
+      return
     }
 
     // Clean up items: remove incomplete, convert to numbers
