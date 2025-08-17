@@ -146,7 +146,7 @@ const AppSetting = ({ setShowBox }) => {
               {/* userName */}
               <div className="mb-5">
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  userName
+                  Name
                 </label>
                 <input
                   type="text"
@@ -164,7 +164,7 @@ const AppSetting = ({ setShowBox }) => {
               {/* userEmail - always disabled */}
               <div className="mb-5">
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  userEmail
+                  Email
                 </label>
                 <input
                   type="userEmail"
@@ -177,7 +177,7 @@ const AppSetting = ({ setShowBox }) => {
               {/* userAddress */}
               <div className="mb-5">
                 <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-                  userAddress
+                  Address
                 </label>
                 <textarea
                   value={userAddress}
