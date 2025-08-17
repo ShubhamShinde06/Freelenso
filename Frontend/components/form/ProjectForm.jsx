@@ -102,7 +102,10 @@ const CreateProjectForm = ({ setShowForm, id }) => {
     const requiredFields = [
       { key: "client", label: "client" },
       { key: "projectName", label: "Project" },
+      { key: "startDate", label: "Start Date" },
+      { key: "endDate", label: "End Date" },
       { key: "budget", label: "Budget" },
+      { key: "projectStatus", label: "Status" },
     ];
 
     for (let field of requiredFields) {

@@ -94,7 +94,7 @@ export default function InvoicePrintSendPageContent() {
     const message = `📄 Invoice Available\nCheck it out here: ${getReadonlyInvoiceUrl()}`;
 
     window.open(
-      `https://wa.me/+91${phoneNumber}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   };
