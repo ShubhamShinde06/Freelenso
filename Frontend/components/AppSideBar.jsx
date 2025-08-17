@@ -94,13 +94,10 @@ export default function AppSidebar(props) {
   return (
     <>
       <Sidebar collapsible="icon" {...props} className={"print:hidden"}>
-        <SidebarHeader className={' h-20'}>
+        <SidebarHeader className={" h-20"}>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                className=" mt-1  h-18 text-2xl"
-              >
+              <SidebarMenuButton asChild className=" mt-1  h-18 text-2xl">
                 <Link href="/dashboard" className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-400 to-violet-600 flex items-center justify-center text-white font-bold">
                     F
@@ -175,7 +172,13 @@ export default function AppSidebar(props) {
                   <SidebarMenuButton>
                     <div className="w-8 h-8 border rounded-full relative overflow-hidden">
                       {User?.userPhoto ? (
-                        <Image src={User.userPhoto} fill alt="user-photo" />
+                        <Image
+                          src={User.userPhoto}
+                          fill
+                          alt="user-photo"
+                          sizes="(max-width: 768px) 40px, (max-width: 1200px) 60px, 80px"
+                          className="object-cover rounded-full"
+                        />
                       ) : (
                         <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center text-xs">
                           {User?.userName?.charAt(0)?.toUpperCase() || "U"}

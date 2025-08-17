@@ -21,7 +21,7 @@ const InvoiceForm = ({ id, setShowForm }) => {
   const today = new Date().toISOString().split("T")[0];
   const User = useSelector((state) => state?.globalState?.User);
   const userId = User?._id;
-  const router = useRouter()
+  const router = useRouter();
 
   const [form, setForm] = useState({
     client: "",
@@ -67,8 +67,11 @@ const InvoiceForm = ({ id, setShowForm }) => {
   //APIs
   const { data: clients } = useClientsGetQuery(userId, { skip: !userId });
   const { data: projects } = useProjectsGetQuery(clientId, { skip: !clientId });
-  const { data: singleData, refetch } = useInvoiceGetSingleQuery(id, { skip: !id });
-  const [invoicePost, { isLoading: isLoadingPost }] =  useInvoiceCreateMutation();
+  const { data: singleData, refetch } = useInvoiceGetSingleQuery(id, {
+    skip: !id,
+  });
+  const [invoicePost, { isLoading: isLoadingPost }] =
+    useInvoiceCreateMutation();
   const [invoicePut, { isLoading: isLoadingPut }] = useInvoicePutMutation();
 
   useEffect(() => {
@@ -134,46 +137,60 @@ const InvoiceForm = ({ id, setShowForm }) => {
   }, [clients, projects, id]);
 
   const handleFormSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Clean up items: remove incomplete, convert to numbers
-  const cleanedItems = form.items
-    .filter(item => item.project && item.hours && item.rate)
-    .map(item => ({
-      ...item,
-      hours: Number(item.hours),
-      rate: Number(item.rate),
-      total: Number(item.total),
-    }));
-
-  const invoiceData = {
-    ...form,
-    items: cleanedItems,
-    user: userId,
-  };
-
-  try {
-    if (id) {
-      const res = await invoicePut({ invoiceData, id });
-      await refetch();
-      showSuccessToast({
-        heading: "Invoice Updated" || res.data.message,
+    if (!form.client) {
+      showErrorToast({
+        heading: "Missing Field",
+        message: `Client must be provided before saving.`,
       });
-      console.log(invoiceData);
-    } else {
-      const res = await invoicePost({ invoiceData });
-      showSuccessToast({
-        heading: "New Invoice Created" || res.data.message,
-      });
-      resetForm();
     }
-  } catch (error) {
-    console.warn("Invoice", error);
-    showErrorToast({
-      heading: error?.message || "Something went wrong",
-    });
-  }
-};
+
+    if (form.items.some((item) => !item.project)) {
+      showErrorToast({
+        heading: "Missing Field",
+        message: `Each project item must have a project selected.`,
+      });
+    }
+
+    // Clean up items: remove incomplete, convert to numbers
+    const cleanedItems = form.items
+      .filter((item) => item.project && item.hours && item.rate)
+      .map((item) => ({
+        ...item,
+        hours: Number(item.hours),
+        rate: Number(item.rate),
+        total: Number(item.total),
+      }));
+
+    const invoiceData = {
+      ...form,
+      items: cleanedItems,
+      user: userId,
+    };
+
+    try {
+      if (id) {
+        const res = await invoicePut({ invoiceData, id });
+        await refetch();
+        showSuccessToast({
+          heading: "Invoice Updated" || res.data.message,
+        });
+        console.log(invoiceData);
+      } else {
+        const res = await invoicePost({ invoiceData });
+        showSuccessToast({
+          heading: "New Invoice Created" || res.data.message,
+        });
+        resetForm();
+      }
+    } catch (error) {
+      console.warn("Invoice", error);
+      showErrorToast({
+        heading: error?.message || "Something went wrong",
+      });
+    }
+  };
 
   const handleClose = () => {
     id ? window.history.back() : setShowForm(false);

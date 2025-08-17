@@ -2,28 +2,26 @@ import { TextField, IconButton, Button } from "@mui/material";
 import { Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-
-
 const InvoiceItem = ({ items, onChange, projects }) => {
   const [localItems, setLocalItems] = useState(items);
 
-    useEffect(() => {
+  useEffect(() => {
     setLocalItems(items);
   }, [items]);
 
   const handleItemChange = (index, field, value) => {
-  const updated = [...localItems];
-  updated[index][field] = value;
-  // Ensure both are numbers
-  const hours = Number(updated[index].hours) || 0;
-  const rate = Number(updated[index].rate) || 0;
-  updated[index].total = hours * rate;
-  setLocalItems(updated);
-  onChange(
-    updated,
-    updated.reduce((acc, curr) => acc + Number(curr.total || 0), 0)
-  );
-};
+    const updated = [...localItems];
+    updated[index][field] = value;
+    // Ensure both are numbers
+    const hours = Number(updated[index].hours) || 0;
+    const rate = Number(updated[index].rate) || 0;
+    updated[index].total = hours * rate;
+    setLocalItems(updated);
+    onChange(
+      updated,
+      updated.reduce((acc, curr) => acc + Number(curr.total || 0), 0)
+    );
+  };
 
   const addItem = () => {
     const newItem = { projectTitle: "", hours: 0, rate: 0, total: 0 };

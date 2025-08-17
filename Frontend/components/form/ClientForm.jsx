@@ -1,4 +1,3 @@
-// components/ClientForm.jsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -12,74 +11,28 @@ import {
 import { useSelector } from "react-redux";
 import { showErrorToast, showSuccessToast } from "../AppToast";
 import { initSocket } from "@/lib/socket";
+import "react-international-phone/style.css";
+import { PhoneInput } from "react-international-phone";
 
 const countryList = [
-  "Afghanistan",
-  "Argentina",
-  "Australia",
-  "Austria",
-  "Bangladesh",
-  "Belgium",
-  "Brazil",
-  "Canada",
-  "China",
-  "Denmark",
-  "Egypt",
-  "Finland",
-  "France",
-  "Germany",
-  "Greece",
-  "Hong Kong",
-  "India",
-  "Indonesia",
-  "Iran",
-  "Iraq",
-  "Ireland",
-  "Israel",
-  "Italy",
-  "Japan",
-  "Kenya",
-  "Malaysia",
-  "Mexico",
-  "Nepal",
-  "Netherlands",
-  "New Zealand",
-  "Nigeria",
-  "Norway",
-  "Pakistan",
-  "Philippines",
-  "Poland",
-  "Portugal",
-  "Russia",
-  "Saudi Arabia",
-  "Singapore",
-  "South Africa",
-  "South Korea",
-  "Spain",
-  "Sri Lanka",
-  "Sweden",
-  "Switzerland",
-  "Thailand",
-  "Turkey",
-  "UAE",
-  "UK",
-  "USA",
-  "Vietnam",
-  "Zimbabwe",
+  "Afghanistan", "Argentina", "Australia", "Austria", "Bangladesh", "Belgium",
+  "Brazil", "Canada", "China", "Denmark", "Egypt", "Finland", "France",
+  "Germany", "Greece", "Hong Kong", "India", "Indonesia", "Iran", "Iraq",
+  "Ireland", "Israel", "Italy", "Japan", "Kenya", "Malaysia", "Mexico", "Nepal",
+  "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan", "Philippines",
+  "Poland", "Portugal", "Russia", "Saudi Arabia", "Singapore", "South Africa",
+  "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand",
+  "Turkey", "UAE", "UK", "USA", "Vietnam", "Zimbabwe",
 ];
 
 const ClientForm = ({ setShowForm, id }) => {
   const User = useSelector((state) => state?.globalState?.User);
 
-  // APIs
-  const [clientPost, { isLoading:isLoadingPost, isErrorPost }] =  useClientCreateMutation();
-  const [clientPut, { isLoading: isLoadingPut, isErrorPut }] = useClientPutMutation();
-  const {
-    data: singleClient,
-    isLoading,
-    isError,
-    refetch,
-  } = useClientGetSingleQuery(id);
+  // API hooks
+  const [clientPost, { isLoading: isLoadingPost }] = useClientCreateMutation();
+  const [clientPut, { isLoading: isLoadingPut }] = useClientPutMutation();
+  const { data: singleClient, isLoading, isError, refetch } =
+    useClientGetSingleQuery(id, { skip: !id });
 
   const [form, setForm] = useState({
     firstName: "",
@@ -91,6 +44,7 @@ const ClientForm = ({ setShowForm, id }) => {
     country: "",
     pincode: "",
   });
+
   const resetForm = () => {
     setForm({
       firstName: "",
@@ -104,34 +58,31 @@ const ClientForm = ({ setShowForm, id }) => {
     });
   };
 
+  // Prefill form when editing
   useEffect(() => {
     if (!id || !singleClient?.data) return;
 
-    const {
-      address = "",
-      company = "",
-      country = "",
-      email = "",
-      firstName = "",
-      invoicesAmt = "",
-      lastName = "",
-      mobileNo = "",
-      pincode = "",
-      status = "",
-    } = singleClient.data;
+    const data = singleClient.data;
 
     setForm({
-      firstName,
-      lastName,
-      email,
-      mobileNo,
-      company,
-      address,
-      country,
-      pincode,
+      firstName: data.firstName ?? "",
+      lastName: data.lastName ?? "",
+      email: data.email ?? "",
+      mobileNo: data.mobileNo
+        ? data.mobileNo.startsWith("+")
+          ? data.mobileNo
+          : `+91${data.mobileNo}`
+        : "",
+      company: data.company ?? "",
+      address: data.address ?? "",
+      country: data.country ?? "",
+      pincode: data.pincode ?? "",
     });
   }, [id, singleClient]);
+  console.log(singleClient?.data, "singleClient")
+  console.log(form)
 
+  // Live update on socket events
   useEffect(() => {
     const socket = initSocket();
 
@@ -150,12 +101,28 @@ const ClientForm = ({ setShowForm, id }) => {
   };
 
   const handleClose = () => {
-    //setShowForm(false);
     id ? window.history.back() : setShowForm(false);
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    const requiredFields = [
+      { key: "firstName", label: "First Name" },
+      { key: "lastName", label: "Last Name" },
+      { key: "email", label: "Email" },
+      { key: "mobileNo", label: "Phone No" },
+    ];
+
+    for (let field of requiredFields) {
+      if (!form[field.key]) {
+        showErrorToast({
+          heading: "Missing Field",
+          message: `${field.label} must be provided before saving.`,
+        });
+        return;
+      }
+    }
 
     const clientData = {
       ...form,
@@ -165,22 +132,19 @@ const ClientForm = ({ setShowForm, id }) => {
     try {
       if (id) {
         const res = await clientPut({ clientData, id });
-         console.log(res)
         showSuccessToast({
-          heading: "Client Update" || res.data.message,
+          heading: res?.data?.message || "Client Updated",
         });
       } else {
         const res = await clientPost({ clientData });
-        console.log(res)
         showSuccessToast({
-          heading: "New Client Created" || res.data.message,
+          heading: res?.data?.message || "New Client Created",
         });
         resetForm();
       }
     } catch (error) {
-      console.warn("client post", error);
       showErrorToast({
-        heading: error?.data.message || "Something went wrong",
+        heading: error?.data?.message || "Something went wrong",
       });
     }
   };
@@ -190,6 +154,7 @@ const ClientForm = ({ setShowForm, id }) => {
 
   return (
     <div className="w-full md:w-[720px] bg-white dark:bg-[#1e1e1e] p-4 lg:p-6 rounded-2xl shadow-xl">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
@@ -201,125 +166,97 @@ const ClientForm = ({ setShowForm, id }) => {
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {id
-                ? "Update in your client list"
+                ? "Update your client information"
                 : "Add a new client to your list."}
             </p>
           </div>
         </div>
         <button
           onClick={handleClose}
-          className="text-gray-400 hover:text-red-600 text-2xl cursor-pointer "
+          className="text-gray-400 hover:text-red-600 text-2xl cursor-pointer"
         >
           &times;
         </button>
       </div>
 
+      {/* Form */}
       <form onSubmit={handleFormSubmit} className="space-y-4">
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="firstName"
-            className="py-2 px-2 border rounded-md"
-            value={form.firstName}
-            placeholder="First Name"
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <input
+          type="text"
+          name="firstName"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.firstName}
+          placeholder="First Name"
+          onChange={handleChange}
+        />
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="lastName"
-            className="py-2 px-2 border rounded-md"
-            value={form.lastName}
-            placeholder="Last Name"
-            onChange={handleChange}
-          />
-        </div>
+        <input
+          type="text"
+          name="lastName"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.lastName}
+          placeholder="Last Name"
+          onChange={handleChange}
+        />
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="email"
-            className="py-2 px-2 border rounded-md"
-            value={form.email}
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <input
+          type="email"
+          name="email"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.email}
+          placeholder="Email"
+          onChange={handleChange}
+        />
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="mobileNo"
-            className="py-2 px-2 border rounded-md"
-            value={form.mobileNo}
-            placeholder="Phone No."
-            onChange={handleChange}
-          />
-        </div>
+        <PhoneInput
+          defaultCountry="in"
+          value={form.mobileNo}
+          onChange={(phone) => setForm({ ...form, mobileNo: phone })}
+          inputClassName="!w-full !py-2 !px-3 !border  dark:!border-[#343535] !rounded-none !bg-transparent !text-gray-900 dark:!text-white !text-sm"
+          className="w-full"
+          placeholder="Phone No."
+        />
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="company"
-            className="py-2 px-2 border rounded-md"
-            value={form.company}
-            placeholder="Company Name"
-            onChange={handleChange}
-          />
-        </div>
+        <input
+          type="text"
+          name="company"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.company}
+          placeholder="Company Name"
+          onChange={handleChange}
+        />
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="address"
-            className="py-2 px-2 border rounded-md"
-            value={form.address}
-            placeholder="Address"
-            onChange={handleChange}
-          />
-        </div>
+        <input
+          type="text"
+          name="address"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.address}
+          placeholder="Address"
+          onChange={handleChange}
+        />
 
-        <div className="flex flex-col gap-2">
-          <select
-            name="country"
-            value={form.country}
-            onChange={handleChange}
-            className="py-2 px-2 border rounded-md"
-          >
-            <option
-              className="bg-white text-black dark:bg-black dark:text-white"
-              value=""
-            >
-              Select Country
+        <select
+          name="country"
+          value={form.country}
+          onChange={handleChange}
+          className="py-2 px-2 border rounded-md w-full"
+        >
+          <option value="">Select Country</option>
+          {countryList.map((country, index) => (
+            <option key={index} value={country}>
+              {country}
             </option>
-            {countryList.map((country, index) => (
-              <option
-                className="bg-white text-black dark:bg-black dark:text-white"
-                key={index}
-                value={country}
-              >
-                {country}
-              </option>
-            ))}
-          </select>
-        </div>
+          ))}
+        </select>
 
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            name="pincode"
-            className="py-2 px-2 border rounded-md"
-            value={form.pincode}
-            placeholder="Pincode"
-            onChange={handleChange}
-          />
-        </div>
-
-       
+        <input
+          type="text"
+          name="pincode"
+          className="py-2 px-2 border rounded-md w-full"
+          value={form.pincode}
+          placeholder="Pincode"
+          onChange={handleChange}
+        />
 
         {/* Actions */}
         <div className="flex gap-4">

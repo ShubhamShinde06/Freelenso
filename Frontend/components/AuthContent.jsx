@@ -30,7 +30,6 @@ export default function AuthContent() {
         { userData },
         { withCredentials: true }
       );
-
       router.push("/dashboard");
     } catch (error) {
       console.error(

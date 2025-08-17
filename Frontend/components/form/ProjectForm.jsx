@@ -99,6 +99,22 @@ const CreateProjectForm = ({ setShowForm, id }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    const requiredFields = [
+      { key: "client", label: "client" },
+      { key: "projectName", label: "Project" },
+      { key: "budget", label: "Budget" },
+    ];
+
+    for (let field of requiredFields) {
+      if (!form[field.key]) {
+        showErrorToast({
+          heading: "Missing Field",
+          message: `${field.label} must be provided before saving.`,
+        });
+        return;
+      }
+    }
+
     const projectData = {
       ...form,
       user: userId,
