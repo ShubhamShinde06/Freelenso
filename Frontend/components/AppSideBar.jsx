@@ -134,7 +134,7 @@ export default function AppSidebar(props) {
             >
               <Link href="/dashboard" className="flex gap-3 items-center">
                 <LayoutDashboard className="w-5 h-5" />
-                <span className="hidden lg:inline">Dashboard</span>
+                <span className="inline">Dashboard</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -164,7 +164,7 @@ export default function AppSidebar(props) {
                   className="flex gap-3 items-center"
                 >
                   <span className="w-5 h-5">{item.iconOne}</span>
-                  <span className="hidden lg:inline">{item.headOne}</span>
+                  <span className="inline">{item.headOne}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -196,8 +196,8 @@ export default function AppSidebar(props) {
                   </div>
                 )}
               </div>
-              <span className="hidden lg:inline">{User?.userName}</span>
-              <ChevronUp className="ml-auto hidden lg:inline" />
+              <span className="inline">{User?.userName}</span>
+              <ChevronUp className="ml-auto inline" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
